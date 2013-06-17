@@ -4,7 +4,7 @@
 * @ver 0.3
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
-* Copyright (c) 2012 Sayak Banerjee <sayakb@kde.org>
+* Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
 * All rights reserved. Do not remove this copyright notice.
 */
 
@@ -85,7 +85,7 @@ class config
             
             $this->site_name       = isset($site_name) ? html_entity_decode($site_name) : 'Sticky Notes';
             $this->site_title      = isset($site_title) ? html_entity_decode($site_title) : 'Sticky Notes pastebin';
-            $this->site_copyright  = isset($site_copyright) ? html_entity_decode($site_copyright) : '&copy; 2012 Sayak Banerjee';
+            $this->site_copyright  = isset($site_copyright) ? html_entity_decode($site_copyright) : '&copy; 2013 Sayak Banerjee';
             $this->skin_name       = isset($skin_name) ? html_entity_decode($skin_name) : 'Bootstrap';
             $this->lang_name       = isset($lang_name) ? html_entity_decode($lang_name) : 'en-gb';
             $this->admin_skin_name = isset($admin_skin_name) ? html_entity_decode($admin_skin_name) : 'Greyscale';
@@ -191,7 +191,7 @@ class config
             fwrite($fp, '$site_title = "Sticky Notes pastebin";' . "\n");
             fwrite($fp, '$site_copyright = "' . htmlentities('Powered by <a href="' .
                         'http://www.sayakbanerjee.com/sticky-notes/" rel="nofollow">' .
-                        'Sticky Notes</a>. Copyright &copy; 2012 <a href="' .
+                        'Sticky Notes</a>. Copyright &copy; 2013 <a href="' .
                         'http://sayakbanerjee.com">Sayak Banerjee</a>.') . '";' . "\n");
             fwrite($fp, '$skin_name = "Bootstrap";' . "\n");
             fwrite($fp, '$lang_name = "en-gb";' . "\n");

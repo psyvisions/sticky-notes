@@ -12,7 +12,7 @@
             <title>{{site_title}}</title>
             <link>[[nav_home_rss]]</link>
         </image>
-        <copyright>Sayak Banerjee (sayakb@kde.org)</copyright>
+        <copyright>Sayak Banerjee (mail@sayakbanerjee.com)</copyright>
         [[list_data]]
     </channel>
 </rss>
