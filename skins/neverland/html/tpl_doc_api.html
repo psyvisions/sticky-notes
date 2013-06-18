@@ -30,6 +30,8 @@
     {{doc_api_para2}}
     <br />
     {{doc_api_para3}}
+    <br /><br />
+    {{doc_api_para_v4}}
     <hr />
 
     <h3>{{api}} &rarr; {{create}}</h3>
@@ -57,10 +59,14 @@
 
     <h4>{{return_success}}</h4>
     <ul class="list-cozy">
-        <li><i>id</i> - {{id_of_paste}}</li>
+        <li>
+            <span class="[[show_id]]"><i>id</i> - {{id_of_paste}}</span>
+            <span class="[[show_key]]"><i>key</i> - {{key_of_paste}}</span>
+        </li>
         <li><i>hash</i> - {{hash_of_paste}}</li>
     </ul>
-    {{url_format_exp}}
+    <span class="[[show_id]]">{{url_form_id_exp}}</span>
+    <span class="[[show_key]]">{{url_form_key_exp}}</span>
     <br /><br />
 
     <h4>{{return_error}}</h4>
@@ -80,13 +86,18 @@
     {{doc_api_para5}}
     <br /><br />
 
-    {{doc_api_para6}}<br />
+    <span class="[[show_id]]">{{doc_api_para6_id}}</span>
+    <span class="[[show_key]]">{{doc_api_para6_key}}</span>
+    <br />
     {{doc_api_para7}}
     <br /><br />
 
     <h4>{{mandatory_params}}</h4>
     <ul class="list-cozy">
-        <li><i>id</i> - {{id_of_paste}}</li>
+        <li>
+            <span class="[[show_id]]"><i>id</i> - {{id_of_paste}}</span>
+            <span class="[[show_key]]"><i>key</i> - {{key_of_paste}}</span>
+        </li>
         <li><i>format</i> - {{result_format_exp}}</li>
     </ul>
 
@@ -98,7 +109,10 @@
 
     <h4>{{return_success}}</h4>
     <ul class="list-cozy">
-        <li><i>id</i> - {{id_of_paste}}</li>
+        <li>
+            <span class="[[show_id]]"><i>id</i> - {{id_of_paste}}</span>
+            <span class="[[show_key]]"><i>key</i> - {{key_of_paste}}</span>
+        </li>
         <li><i>author</i> - {{paste_author_exp}}</li>
         <li><i>timestamp</i> - {{paste_timestamp}}</li>
         <li><i>language</i> - {{paste_lang_exp}}</li>

@@ -25,6 +25,12 @@ if (!in_array($cat, $docs))
 // Set the file
 $skin->init('tpl_doc_' . $cat);
 
+// Set template variables
+$skin->assign(array(
+    'show_id'  => $skin->visibility($config->url_key_enabled, true),
+    'show_key' => $skin->visibility($config->url_key_enabled),
+));
+
 // Yes, this is a tiny file. I like tiny files.
 $skin->title($lang->get('doc_' . $cat . '_title') . ' &bull; ' . $lang->get('site_title'));
 $skin->output();

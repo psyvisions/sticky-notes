@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <result>
-    <id>[[paste_id]]</id>
+    <[[paste_param]]>[[paste_id]]</[[paste_param]]>
     <author>[[paste_user]]</author>
     <timestamp>[[paste_timestamp]]</timestamp>
     <language>[[paste_lang]]</language>

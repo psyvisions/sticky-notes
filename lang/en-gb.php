@@ -112,10 +112,13 @@ $lang_data = array(
     'return_success'    => 'Return values on success',
     'return_error'      => 'Return values on error',
     'id_of_paste'       => 'ID of the paste',
+    'key_of_paste'      => 'Alphanumeric ID of the paste',
     'hash_of_paste'     => 'Hash/key for the paste (only for private pastes)',
     'password_of_paste' => 'Password to unlock the paste (only for protected pastes)',
-    'url_format_exp'    => 'URLs can be framed as <a>[[host]]&lt;id&gt;</a> for public pastes ' .
-                           'and <a>[[host]]&lt;id&gt;/&lt;hash&gt;</a> for private pastes.',
+    'url_form_id_exp'   => 'URLs can be framed as <a>[[host]]&lt;id&gt;</a> for public pastes, and ' .
+                           '<a>[[host]]&lt;id&gt;/&lt;hash&gt;</a> for private pastes.',
+    'url_form_key_exp'  => 'URLs can be framed as <a>[[host]]p/&lt;key&gt;</a> for public pastes, and ' .
+                           '<a>[[host]]p/&lt;key&gt;/&lt;hash&gt;</a> for private pastes.',
     'result_format_exp' => 'The format (xml or json) in which you want the result',
     'error_ret_exp'     => 'A parameter <i>error</i> with one of these error codes ' .
                            'is returned:',
@@ -164,10 +167,15 @@ $lang_data = array(
     'Even though you can use both methods to retrieve all information, we strongly recommend ' .
     'that you use POST when sending password over to the pastebin server.',
 
-    'doc_api_para6'
+    'doc_api_para6_id'
         =>
     'You can send the http GET request in the following format: <a>[[host]]api/&lt;format&gt;/&lt;id&gt;/' .
-    '&lt;hash&gt;/&lt;password&gt;</a>.',
+    '&lt;hash&gt;/&lt;password&gt;</a>',
+
+    'doc_api_para6_key'
+        =>
+    'You can send the http GET request in the following format: <a>[[host]]p/api/&lt;format&gt;/&lt;key&gt;' .
+    '/&lt;hash&gt;/&lt;password&gt;</a>.',
 
     'doc_api_para7'
         =>
@@ -261,6 +269,17 @@ $lang_data = array(
     'is created, all URLs point to the dedicated pastebin pages (For example, the feed link changes to <a>[[host]]~myproject/rss' .
     '</a> for your project specific pastebin and shows only pastes belonging to your project). Pastes made within a project ' .
     'are not listed in other projects\' archives.',
+    
+    'doc_api_para_v4'
+        =>
+    '<b>Notice:</b> Read on if your site was running on v0.3 or older and you have upgraded to v0.4 or newer. Since Sticky Notes ' .
+    'version 0.4, alphanumeric keys have been introduced. If configured for a site, users will be able to access their pastes using ' .
+    'an alpha numeric identifier in the URL as opposed to a numeric ID in v0.3. The new URLs work in the exact same way the IDs ' .
+    'worked before, except they now have a /p/ added to the URL just after the domain name. For example, <a>[[host]]&lt;id&gt;</a> ' .
+    'will now become <a>[[host]]p/&lt;key&gt;</a>. If you are consuming the API on a site that used to have IDs and now has keys, ' .
+    'you should remember two essential points: (1) While building the URL, whenever the API returns a <i>key</i> parameter instead of ' .
+    'an <i>id</i>, just append a /p/ after your domain name, and (2) when using the API list call, old IDs will be prepended with a #. ' .
+    'Remember to remove the # before forming the URLs. The keys however, in the list API, appear normally without any extra characters.',
 );
 
 ?>
