@@ -97,21 +97,25 @@ class nav
             $base_path = $rss ? $core->base_uri() : $core->path();
             
             // Determine whether to use ID or key
-            $is_key = $config->url_key_enabled && !empty($paste_key);
-            $param = $is_key ? "key" : "id";
-            $key = $is_key ? $paste_key : $paste_id;
+            if ($config->url_key_enabled && !empty($paste_key))
+            {
+                $key = 'p' . $paste_key;
+            }
+            else
+            {
+                $key = $paste_id;
+            }
             
             if ($this->rewrite_on)
             {
-                $url = $base_path . ($is_key ? "p/" : "") .
-                                    (!empty($project) ? "~{$project}/" : "") .
+                $url = $base_path . (!empty($project) ? "~{$project}/" : "") .
                                     "{$key}/" .
                                     (!empty($hash) ? "{$hash}/" : "") .
                                     (!empty($format) ? "{$format}/" : "");
             }
             else
             {
-                $url = $base_path . "show.php?{$param}={$key}" .
+                $url = $base_path . "show.php?id={$key}" .
                                     (!empty($hash) ? "&hash={$hash}" : "") .
                                     (!empty($project) ? "&project={$project}" : "") .
                                     (!empty($format) ? "&mode={$format}" : "");

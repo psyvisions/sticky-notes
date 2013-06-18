@@ -139,11 +139,11 @@ foreach ($rows as $row)
     // Determine the unique identifier
     if ($config->url_key_enabled && !empty($row['urlkey']))
     {
-        $key = $row['urlkey'];
+        $key = 'p' . $row['urlkey'];
     }
     else
     {
-        $key = '#' . $row['id'];
+        $key = $row['id'];
     }
 
     // Assign template variables

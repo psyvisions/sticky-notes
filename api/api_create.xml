@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <result>
-    <[[paste_param]]>[[paste_id]]</[[paste_param]]>
+    <id>[[paste_id]]</id>
     <hash>[[paste_hash]]</hash>
 </result>

@@ -1,7 +1,7 @@
 {
     "result":
     {
-        "[[paste_param]]": "[[paste_id]]",
+        "id": "[[paste_id]]",
         "author": "[[paste_user]]",
         "timestamp": "[[paste_timestamp]]",
         "language": "[[paste_lang]]",

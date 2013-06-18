@@ -12,19 +12,12 @@
 include_once('init.php');
 
 // Collect some data
-$paste_id = $core->variable('id', 0);
-$paste_key = $core->variable('key', '-');
+$paste_id = $core->variable('id', '');
 $hash = $core->variable('hash', 0);
 $mode = $core->variable('mode', '');
 $project = $core->variable('project', '');
 $password = $core->variable('password', '');
-
-// Determine which key to use
-$key = $config->url_key_enabled ? $paste_key : $paste_id;
-$sid = $core->variable('session_id_' . $key, '', true);
 $mode = strtolower($mode);
-
-// Password exempt
 $exempt = false;
 
 // Trim trailing /
@@ -33,6 +26,7 @@ if (strrpos($password, '/') == strlen($password) - 1)
     $password = substr($password, 0, strlen($password) - 1);
 }
 
+// Set the view mode
 if (empty($mode))
 {
     $mode = $core->variable('format', '');
@@ -51,27 +45,39 @@ if ($mode != 'raw')
     $skin->init('tpl_show');
 }
 
-// We want paste id or key
-if ($paste_id == 0 && $paste_key == '-')
+// Prepare the paste ID for use
+if (!empty($paste_id))
+{
+    if ($config->url_key_enabled && strtolower(substr($paste_id, 0, 1)) == 'p')
+    {
+        $paste_id = substr($paste_id, 1);
+        $is_key = true;
+    }
+    else if (is_numeric($paste_id))
+    {
+        $paste_id = intval($paste_id);
+        $is_key = false;
+    }
+}
+else
 {
     $core->redirect($core->path() . 'all/');
 }
 
-// Escape the paste ID and key
-$db->escape($paste_id);
-$db->escape($paste_key);
+// Set up session for the paste
+$sid = $core->variable('session_id_' . $paste_id, '', true);
 
-// Build the query - we use the key only if a key was passed
-// Else we assume that ID was passed
-if ($paste_key != '-' && strlen($paste_key) == 8)
+// Escape the paste id
+$db->escape($paste_id);
+
+// Build the query based on whether a key or ID was used
+if ($is_key)
 {
-    $sql = "SELECT * FROM {$db->prefix}main WHERE urlkey = '{$paste_key}' LIMIT 1";
-    $param = "key";
+    $sql = "SELECT * FROM {$db->prefix}main WHERE urlkey = '{$paste_id}' LIMIT 1";
 }
 else
 {
     $sql = "SELECT * FROM {$db->prefix}main WHERE id = {$paste_id} LIMIT 1";
-    $param = "id";
 }
 
 $row = $db->query($sql, true);
@@ -80,7 +86,7 @@ $row = $db->query($sql, true);
 // key in the DB. We skip this check if keys are disabled
 if ($config->url_key_enabled && $row != null)
 {
-    if ($paste_id > 0 && !empty($row['urlkey']))
+    if (!$is_key && !empty($row['urlkey']))
     {
         $row = null;
     }
@@ -215,7 +221,7 @@ if (!empty($row['password']) && !empty($password) && !$exempt)
         // Create a session
         $sid = sha1(time() . $core->remote_ip());
 
-        $core->set_cookie('session_id_' . $key, $sid);
+        $core->set_cookie('session_id_' . $paste_id, $sid);
         $db->query("INSERT INTO {$db->prefix}session " .
                    "(sid, timestamp) VALUES ('{$sid}', " . time() . ")");
     }
@@ -253,24 +259,25 @@ $code_data = (empty($mode) ? $geshi->parse_code() : htmlspecialchars($row['data'
 $lang->escape($code_data);
 $skin->escape($code_data);
 
+$skin_key = $is_key ? 'p' . $paste_id : $paste_id;
+
 // Assign template variables
 $skin->assign(array(
-    'paste_id'          => $key,
-    'paste_param'       => $param,
+    'paste_id'          => $skin_key,
     'paste_data'        => $code_data,
     'paste_lang'        => htmlspecialchars($row['language']),
     'paste_info'        => $info,
     'paste_user'        => $user,
     'paste_timestamp'   => $row['timestamp'],
     'raw_url'           => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, false, 'raw'),
-    'share_url'         => urlencode($core->base_uri()),
-    'share_title'       => urlencode($lang->get('paste') . ' #' . $row['id']),
+    'share_url'         => urlencode($core->full_uri()),
+    'share_title'       => urlencode($lang->get('paste') . ' #' . $skin_key),
     'error_visibility'  => 'hidden',
     'geshi_stylesheet'  => $geshi->get_stylesheet(),
 ));
 
 // Let's output the page now
-$skin->title("#{$row['id']} &bull; " . $lang->get('site_title'));
+$skin->title("#{$skin_key} &bull; " . $lang->get('site_title'));
 
 if ($mode == 'raw')
 {

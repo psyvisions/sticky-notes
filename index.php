@@ -160,8 +160,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         if ($new_id)
         {
             $skin->assign(array(
-                'paste_id'    => $config->url_key_enabled ? $url_key : $new_id,
-                'paste_param' => $config->url_key_enabled ? 'key' : 'id',
+                'paste_id'    => $config->url_key_enabled ? "p{$url_key}" : $new_id,
                 'paste_hash'  => $private ? $hash : '',
             ));
 

@@ -45,6 +45,9 @@ foreach ($db_fields as $field)
 $sql = "ALTER TABLE {$db->prefix}main ADD urlkey VARCHAR(8) DEFAULT ''";
 $db->query($sql);
 
+// Create indexes
+$db->query("CREATE INDEX {$db->prefix}idx_urlkey ON {$db->prefix}main(urlkey)");
+
 // Done!
 $gsod->trigger('Upgrade complete. Please lock/remove the update file.');
 

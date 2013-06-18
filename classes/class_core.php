@@ -40,7 +40,7 @@ class core
         $this->build_num = $data[1];
     }
 
-    // Function to return root path
+    // Function to return current path
     function path()
     {
         $path = $_SERVER['PHP_SELF'];
@@ -142,9 +142,9 @@ class core
     {
         return $_SERVER['REQUEST_URI'];
     }
-
-    // Get the base URI
-    function base_uri()
+    
+    // Returns the server's hostname
+    function hostname()
     {
         $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
 
@@ -160,10 +160,20 @@ class core
         {
             $hostname = "unknown_host";
         }
-
-        $uri = $protocol . '://' . $hostname . $this->path();
         
-        return $uri;
+        return $protocol . '://' . $hostname;
+    }
+
+    // Get the base URI
+    function base_uri()
+    {
+        return $this->hostname() . $this->path();
+    }
+    
+    // Get the full URI
+    function full_uri()
+    {
+        return $this->hostname() . $this->request_uri();
     }
     
     // Method to replace square brackets with normal braces

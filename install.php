@@ -72,6 +72,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "private TINYINT(1) NOT NULL DEFAULT 0, " .
            "hash INT(12) UNSIGNED NOT NULL, " .
            "ip VARCHAR(50) NOT NULL, " .
+           "urlkey VARCHAR(8) DEFAULT '', " .
            "PRIMARY KEY(id))");
 
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}session (" .
@@ -102,6 +103,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}ipbans (" .
 $db->query("ALTER TABLE {$db->prefix}main DEFAULT CHARACTER SET utf8");
 $db->query("ALTER TABLE {$db->prefix}main CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci");
 $db->query("ALTER TABLE {$db->prefix}main AUTO_INCREMENT = 1000");
+$db->query("CREATE INDEX {$db->prefix}idx_urlkey ON {$db->prefix}main(urlkey)");
 $db->query("CREATE INDEX {$db->prefix}idx_private ON {$db->prefix}main(id, private)");
 $db->query("CREATE INDEX {$db->prefix}idx_author ON {$db->prefix}main(id, author)");
 $db->query("CREATE INDEX {$db->prefix}idx_project ON {$db->prefix}main(id, project)");
