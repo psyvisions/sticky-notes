@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -16,6 +16,7 @@ $config_skin = $core->variable('config_skin', $config->skin_name);
 $config_lang = $core->variable('config_lang', $config->lang_name);
 $config_admin_skin = $core->variable('config_admin_skin', $config->admin_skin_name);
 $config_admin_lang = $core->variable('config_admin_lang', $config->admin_lang_name);
+$config_url_key = $core->variable('config_url_key', $config->url_key_enabled ? 1 : 0);
 $config_sg_svcs = $core->variable('config_sg_svcs', explode(',', $config->sg_services));
 $config_php_key = $core->variable('config_php_key', $config->sg_php_key);
 $config_php_days = $core->variable('config_php_days', $config->sg_php_days);
@@ -52,6 +53,7 @@ if ($config_save)
         $config->lang_name       = $config_lang;
         $config->admin_skin_name = $config_admin_skin;
         $config->admin_lang_name = $config_admin_lang;
+        $config->url_key_enabled = $config_url_key != 0;
         
         $config->sg_services     = implode(',', $config_sg_svcs);
         $config->sg_php_key      = $config_php_key;
@@ -97,6 +99,8 @@ $skin->assign(array(
     'config_php_score'    => $config_php_score,
     'config_php_type'     => $config_php_type,
     'config_censor'       => $config_censor,
+    'config_url_key_yes'  => $skin->checked($config_url_key == 1),
+    'config_url_key_no'   => $skin->checked($config_url_key == 0),
     'skin_list'           => $skin_list,
     'lang_list'           => $lang_list,
     'admin_skin_list'     => $admin_skin_list,

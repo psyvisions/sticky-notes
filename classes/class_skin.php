@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -162,7 +162,11 @@ class skin
 
         if (strpos($core->script_name(), 'show.php') !== false)
         {
-            $header_tagline .= '/' . $core->variable('id', '');
+            $id = $core->variable('id', '');
+            $key = $core->variable('key', '');
+            $show = empty($key) ? $id : $key;
+            
+            $header_tagline .= '/' . $show;
         }
         else if (strpos($core->script_name(), 'list.php') !== false)
         {
@@ -383,6 +387,39 @@ class skin
     function escape(&$data)
     {
         $data = preg_replace('/\[\[(.*?)\]\]/', '&#91;&#91;$1&#93;&#93;', $data);
+    }
+
+    // Return checked status of checkbox/radio based on a condition
+    function checked($condition, $invert = false)
+    {
+        if ($invert)
+        {
+            $condition = !$condition;
+        }
+
+        return $condition ? 'checked="checked"' : '';
+    }
+
+    // Return disabled status of control based on a condition
+    function disabled($condition, $invert = false)
+    {
+        if ($invert)
+        {
+            $condition = !$condition;
+        }
+
+        return $condition ? 'disabled="disabled"' : '';
+    }
+
+    // Return visibility based on condition
+    function visibility($condition, $invert = false)
+    {
+        if ($invert)
+        {
+            $condition = !$condition;
+        }
+
+        return $condition ? 'visible' : 'hidden';
     }
 }
 

@@ -69,6 +69,12 @@ label
     margin-right: 10px;
 }
 
+label.radio > input[type="radio"]
+{
+    margin-right: 1px;
+    margin-left: 0px;
+}
+
 .hoveractive tbody tr:nth-child(odd):hover
 {
     background: #fcffcc !important;

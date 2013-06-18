@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -25,6 +25,7 @@ class config
     var $lang_name;
     var $admin_skin_name;
     var $admin_lang_name;
+    var $url_key_enabled;
     
     var $sg_services;
     var $sg_php_key;
@@ -82,7 +83,7 @@ class config
             $this->db_username     = isset($db_username) ? html_entity_decode($db_username) : '';
             $this->db_password     = isset($db_password) ? html_entity_decode($db_password) : '';
             $this->db_prefix       = isset($db_prefix) ? html_entity_decode($db_prefix) : '';
-            
+
             $this->site_name       = isset($site_name) ? html_entity_decode($site_name) : 'Sticky Notes';
             $this->site_title      = isset($site_title) ? html_entity_decode($site_title) : 'Sticky Notes pastebin';
             $this->site_copyright  = isset($site_copyright) ? html_entity_decode($site_copyright) : '&copy; 2013 Sayak Banerjee';
@@ -90,7 +91,8 @@ class config
             $this->lang_name       = isset($lang_name) ? html_entity_decode($lang_name) : 'en-gb';
             $this->admin_skin_name = isset($admin_skin_name) ? html_entity_decode($admin_skin_name) : 'Greyscale';
             $this->admin_lang_name = isset($admin_lang_name) ? html_entity_decode($admin_lang_name) : 'en-gb';
-            
+            $this->url_key_enabled = isset($url_key_enabled) ? $url_key_enabled : false;
+
             $this->sg_services     = isset($sg_services) ? html_entity_decode($sg_services) : 'ipban,noflood,stealth,php,censor';
             $this->sg_php_key      = isset($sg_php_key) ? html_entity_decode($sg_php_key) : '';
             $this->sg_php_days     = isset($sg_php_days) ? $sg_php_days : 90;
@@ -137,7 +139,8 @@ class config
             fwrite($fp, '$skin_name = "' . htmlentities($this->skin_name) . '";' . "\n");
             fwrite($fp, '$lang_name = "' . htmlentities($this->lang_name) . '";' . "\n");
             fwrite($fp, '$admin_skin_name = "' . htmlentities($this->admin_skin_name) . '";' . "\n");
-            fwrite($fp, '$admin_lang_name = "' . htmlentities($this->admin_lang_name) . '";' . "\n\n");
+            fwrite($fp, '$admin_lang_name = "' . htmlentities($this->admin_lang_name) . '";' . "\n");
+            fwrite($fp, '$url_key_enabled = ' . ($this->url_key_enabled ? 'true' : 'false') . ';' . "\n\n");
 
             fwrite($fp, '$sg_services = "' . htmlentities($this->sg_services) . '";' . "\n");
             fwrite($fp, '$sg_php_key = "' . htmlentities($this->sg_php_key) . '";' . "\n");
@@ -196,7 +199,8 @@ class config
             fwrite($fp, '$skin_name = "Bootstrap";' . "\n");
             fwrite($fp, '$lang_name = "en-gb";' . "\n");
             fwrite($fp, '$admin_skin_name = "Greyscale";' . "\n");
-            fwrite($fp, '$admin_lang_name = "en-gb";' . "\n\n");
+            fwrite($fp, '$admin_lang_name = "en-gb";' . "\n");
+            fwrite($fp, '$url_key_enabled = false;' . "\n\n");
 
             fwrite($fp, '$sg_services = "ipban,noflood,stealth,php,censor";' . "\n");
             fwrite($fp, '$sg_php_key = "";' . "\n");

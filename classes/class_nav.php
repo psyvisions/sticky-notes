@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -88,24 +88,30 @@ class nav
     }
 
     // Get the URL for a paste
-    function get_paste($paste_id, $hash, $project, $rss, $format = '')
+    function get_paste($paste_id, $paste_key, $hash, $project, $rss, $format = '')
     {
-        global $core;
+        global $core, $config;
         
         try
         {
             $base_path = $rss ? $core->base_uri() : $core->path();
             
+            // Determine whether to use ID or key
+            $is_key = $config->url_key_enabled && !empty($paste_key);
+            $param = $is_key ? "key" : "id";
+            $key = $is_key ? $paste_key : $paste_id;
+            
             if ($this->rewrite_on)
             {
-                $url = $base_path . (!empty($project) ? "~{$project}/" : "") .
-                                    "{$paste_id}/" .
+                $url = $base_path . ($is_key ? "p/" : "") .
+                                    (!empty($project) ? "~{$project}/" : "") .
+                                    "{$key}/" .
                                     (!empty($hash) ? "{$hash}/" : "") .
                                     (!empty($format) ? "{$format}/" : "");
             }
             else
             {
-                $url = $base_path . "show.php?id={$paste_id}" .
+                $url = $base_path . "show.php?{$param}={$key}" .
                                     (!empty($hash) ? "&hash={$hash}" : "") .
                                     (!empty($project) ? "&project={$project}" : "") .
                                     (!empty($format) ? "&mode={$format}" : "");

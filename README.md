@@ -1,4 +1,4 @@
-Sticky Notes pastebin v0.3
+Sticky Notes pastebin v0.4
 ===========================
 
 Sticky notes is a free and open source pastebin application.

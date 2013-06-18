@@ -1,7 +1,7 @@
 {
     "result":
     {
-        "id": "[[paste_id]]",
+        "[[paste_param]]": "[[paste_id]]",
         "hash": "[[paste_hash]]"
     }
 }

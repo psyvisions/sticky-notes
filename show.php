@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -13,11 +13,15 @@ include_once('init.php');
 
 // Collect some data
 $paste_id = $core->variable('id', 0);
+$paste_key = $core->variable('key', '-');
 $hash = $core->variable('hash', 0);
 $mode = $core->variable('mode', '');
 $project = $core->variable('project', '');
 $password = $core->variable('password', '');
-$sid = $core->variable('session_id_' . $paste_id, '', true);
+
+// Determine which key to use
+$key = $config->url_key_enabled ? $paste_key : $paste_id;
+$sid = $core->variable('session_id_' . $key, '', true);
 $mode = strtolower($mode);
 
 // Password exempt
@@ -47,18 +51,40 @@ if ($mode != 'raw')
     $skin->init('tpl_show');
 }
 
-// We want paste id
-if ($paste_id == 0)
+// We want paste id or key
+if ($paste_id == 0 && $paste_key == '-')
 {
     $core->redirect($core->path() . 'all/');
 }
 
-// Escape the paste id
+// Escape the paste ID and key
 $db->escape($paste_id);
+$db->escape($paste_key);
 
-// Get the paste data
-$sql = "SELECT * FROM {$db->prefix}main WHERE id = {$paste_id} LIMIT 1";
+// Build the query - we use the key only if a key was passed
+// Else we assume that ID was passed
+if ($paste_key != '-' && strlen($paste_key) == 8)
+{
+    $sql = "SELECT * FROM {$db->prefix}main WHERE urlkey = '{$paste_key}' LIMIT 1";
+    $param = "key";
+}
+else
+{
+    $sql = "SELECT * FROM {$db->prefix}main WHERE id = {$paste_id} LIMIT 1";
+    $param = "id";
+}
+
 $row = $db->query($sql, true);
+
+// If we queried using an ID, we show the paste only if there is no corresponding
+// key in the DB. We skip this check if keys are disabled
+if ($config->url_key_enabled && $row != null)
+{
+    if ($paste_id > 0 && !empty($row['urlkey']))
+    {
+        $row = null;
+    }
+}
 
 // Check if something was returned
 if ($row == null)
@@ -189,7 +215,7 @@ if (!empty($row['password']) && !empty($password) && !$exempt)
         // Create a session
         $sid = sha1(time() . $core->remote_ip());
 
-        $core->set_cookie('session_id_' . $paste_id, $sid);
+        $core->set_cookie('session_id_' . $key, $sid);
         $db->query("INSERT INTO {$db->prefix}session " .
                    "(sid, timestamp) VALUES ('{$sid}', " . time() . ")");
     }
@@ -229,13 +255,14 @@ $skin->escape($code_data);
 
 // Assign template variables
 $skin->assign(array(
-    'paste_id'          => $row['id'],
+    'paste_id'          => $key,
+    'paste_param'       => $param,
     'paste_data'        => $code_data,
     'paste_lang'        => htmlspecialchars($row['language']),
     'paste_info'        => $info,
     'paste_user'        => $user,
     'paste_timestamp'   => $row['timestamp'],
-    'raw_url'           => $nav->get_paste($row['id'], $hash, $project, false, 'raw'),
+    'raw_url'           => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, false, 'raw'),
     'share_url'         => urlencode($core->base_uri()),
     'share_title'       => urlencode($lang->get('paste') . ' #' . $row['id']),
     'error_visibility'  => 'hidden',

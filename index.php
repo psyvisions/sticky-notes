@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -131,17 +131,27 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     // Generate the password hash
     $salt = substr(sha1(time()), rand(0, 34), 5);
     $pwd_hash = $password ? sha1(sha1($password) . $salt) : '';
+    
+    // Generate URL key
+    if ($config->url_key_enabled)
+    {
+        $url_key = substr(sha1(time() . $remote_ip . $salt), 0, 8);
+    }
+    else
+    {
+        $url_key = '';
+    }
 
     // Insert into the DB
     $sql = "INSERT INTO {$db->prefix}main " .
            "(author, project, timestamp, expire, data, language, " .
-           "password, salt, private, hash, ip) VALUES " .
+           "password, salt, private, hash, ip, urlkey) VALUES " .
            "('{$author}', '{$project}', {$time}, {$expire}" .
            ", '{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
            ($private == "on" || $private == "yes" || $password ? "1" : "0") .
-           ", {$hash}, '{$remote_ip}')";
-    $db->query($sql);
+           ", {$hash}, '{$remote_ip}', '{$url_key}')";
 
+    $db->query($sql);
     $new_id = $db->get_id();
 
     // Address API requests
@@ -149,12 +159,11 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     {
         if ($new_id)
         {
-            $skin->assign('paste_id', $new_id);
-
-            if ($private)
-            {
-                $skin->assign('paste_hash', $hash);
-            }
+            $skin->assign(array(
+                'paste_id'    => $config->url_key_enabled ? $url_key : $new_id,
+                'paste_param' => $config->url_key_enabled ? 'key' : 'id',
+                'paste_hash'  => $private ? $hash : '',
+            ));
 
             // Output the XML/JSON data
             echo $skin->output("api_create.{$mode}");
@@ -173,7 +182,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         if ($new_id)
         {
             $hash_arg = ($private || $password) ? $hash : '';
-            $url = $nav->get_paste($new_id, $hash_arg, $project, false);
+            $url = $nav->get_paste($new_id, $url_key, $hash_arg, $project, false);
 
             if (!$password)
             {

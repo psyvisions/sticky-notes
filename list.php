@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -136,10 +136,20 @@ foreach ($rows as $row)
         $skin->escape($code_data);
     }
 
+    // Determine the unique identifier
+    if ($config->url_key_enabled && !empty($row['urlkey']))
+    {
+        $key = $row['urlkey'];
+    }
+    else
+    {
+        $key = '#' . $row['id'];
+    }
+
     // Assign template variables
     $skin->assign(array(
-        'paste_id'          => $row['id'],
-        'paste_url'         => $nav->get_paste($row['id'], null, $project, $rss),
+        'paste_id'          => $key,
+        'paste_url'         => $nav->get_paste($row['id'], $row['urlkey'], null, $project, $rss),
         'paste_data'        => $code_data,
         'paste_lang'        => htmlspecialchars($row['language']),
         'paste_info'        => $info,
@@ -155,7 +165,7 @@ foreach ($rows as $row)
     }
     else if ($mode)
     {
-        $output_data .= $api->parse($mode, $count, $row['id'], ($count == $rowcount));
+        $output_data .= $api->parse($mode, $count, $key, ($count == $rowcount));
     }
     else
     {

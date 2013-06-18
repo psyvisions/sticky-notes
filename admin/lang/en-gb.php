@@ -1,7 +1,7 @@
 <?php
 /**
 * Sticky Notes pastebin
-* @ver 0.3
+* @ver 0.4
 * @license BSD License - www.opensource.org/licenses/bsd-license.php
 *
 * Copyright (c) 2013 Sayak Banerjee <mail@sayakbanerjee.com>
@@ -151,6 +151,9 @@ $lang_data = array(
     'config_cantwrite'          => 'The config file isn\'t writable. Please check file permissions',
     'no_user_ldap'              => 'This module is unavailable when LDAP authentication is in use',
     'changes_saved'             => 'Your changes were saved successfully',
+    'url_key'                    => 'Enable URL key',
+    'url_key_exp'                => 'This feature will create alphanumeric paste URL identifiers. Previously created ' .
+                                   'numeric identifiers will still work.',
 
     /* Page: login.php */
     'admin_login'       => 'Administration Login',
