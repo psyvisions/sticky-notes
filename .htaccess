@@ -12,8 +12,9 @@ php_flag magic_quotes_gpc off
     # Rewrite rules
     RewriteEngine on
 
-    # Setup link
+    # Setup links
     RewriteRule ^install/?$ install.php [NC]
+    RewriteRule ^upgrade/?$ upgrade.php [NC]
 
     # Documentation links
     RewriteRule ^doc/([a-z]+)/?$ doc.php?cat=$1 [NC]

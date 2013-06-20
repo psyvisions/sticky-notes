@@ -73,16 +73,16 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "hash INT(12) UNSIGNED NOT NULL, " .
            "ip VARCHAR(50) NOT NULL, " .
            "urlkey VARCHAR(8) DEFAULT '', " .
-           "PRIMARY KEY(id))");
+           "PRIMARY KEY(id)) ENGINE = MyISAM");
 
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}session (" .
            "sid VARCHAR(40) NOT NULL, " .
            "timestamp INT(11) UNSIGNED NOT NULL, " .
-           "PRIMARY KEY(sid))");
+           "PRIMARY KEY(sid)) ENGINE = MyISAM");
 
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}cron (" .
            "timestamp INT(11) UNSIGNED NOT NULL DEFAULT 0, " .
-           "locked TINYINT(1) NOT NULL DEFAULT 0)");
+           "locked TINYINT(1) NOT NULL DEFAULT 0) ENGINE = MyISAM");
     
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}users (" .
            "id INT(12) UNSIGNED NOT NULL AUTO_INCREMENT, " .
@@ -93,11 +93,11 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}users (" .
            "dispname VARCHAR(100) DEFAULT '', " .
            "sid VARCHAR(40) DEFAULT '', " .
            "lastlogin INT(11) UNSIGNED DEFAULT 0, " .
-           "PRIMARY KEY(id))");           
+           "PRIMARY KEY(id)) ENGINE = MyISAM");           
            
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}ipbans (" .
            "ip VARCHAR(50) NOT NULL, " .
-           "PRIMARY KEY(ip))");
+           "PRIMARY KEY(ip)) ENGINE = MyISAM");
 
 // Add index and charset data
 $db->query("ALTER TABLE {$db->prefix}main DEFAULT CHARACTER SET utf8");

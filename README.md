@@ -30,7 +30,7 @@ URL accordingly).
 Once the install script finishes executing, it should display "Successfully
 installed" on the browser window.
 Now uncomment line 19 again. This is strongly recommended for security reasons.
-You may as well completely remove install.php from your hosts root folder.
+You may as well completely remove install.php from your host's root folder.
 
 Step 3 - Adding themes
 -----------------------
@@ -46,3 +46,13 @@ Copy the localization script (for example en_us.php) to the "lang" folder.
 Make sure the file name is in lowercase.
 Now login to the admin panel -> site configuration and change the language
 code. Save your configuration by clicking the 'Save' button at the bottom.
+
+
+Upgrading
+==========
+
+You can upgrade your Sticky Notes installation from v0.3 to v0.4 using the
+automated update script. Simply comment out line 16 and visit
+http://yoursite.com/upgrade/ in your browser. Once upgrade is complete,
+remember to comment out line 16 again or remove upgrade.php from your root
+folder.

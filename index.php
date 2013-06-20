@@ -21,6 +21,8 @@ $private = $core->variable('paste_private', '');
 $project = $core->variable('project', '');
 $mode = $core->variable('mode', '');
 $time = time();
+$skip_insert = false;
+$new_id = 0;
 
 if (empty($project))
 {
@@ -135,24 +137,43 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     // Generate URL key
     if ($config->url_key_enabled)
     {
-        $url_key = substr(sha1(time() . $remote_ip . $salt), 0, 8);
+        $skip_insert = true;
+
+        // Generate a unique key. We cannot simply use a constraint as we have a nullable column
+        // We retry 3 times only
+        for($unique = 1; $unique <= 3; $unique++)
+        {
+            $url_key = substr(sha1(time() . $remote_ip . $salt), 0, 8);
+            
+            $sql = "SELECT id AS count FROM {$db->prefix}main WHERE urlkey = '{$url_key}'";
+            $row = $db->query($sql);
+            
+            if ($row == null)
+            {
+                $skip_insert = false;
+                break;
+            }
+        }
     }
     else
     {
         $url_key = '';
     }
 
-    // Insert into the DB
-    $sql = "INSERT INTO {$db->prefix}main " .
-           "(author, project, timestamp, expire, data, language, " .
-           "password, salt, private, hash, ip, urlkey) VALUES " .
-           "('{$author}', '{$project}', {$time}, {$expire}" .
-           ", '{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
-           ($private == "on" || $private == "yes" || $password ? "1" : "0") .
-           ", {$hash}, '{$remote_ip}', '{$url_key}')";
+    if (!$skip_insert)
+    {
+        // Insert into the DB
+        $sql = "INSERT INTO {$db->prefix}main " .
+               "(author, project, timestamp, expire, data, language, " .
+               "password, salt, private, hash, ip, urlkey) VALUES " .
+               "('{$author}', '{$project}', {$time}, {$expire}" .
+               ", '{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
+               ($private == "on" || $private == "yes" || $password ? "1" : "0") .
+               ", {$hash}, '{$remote_ip}', '{$url_key}')";
 
-    $db->query($sql);
-    $new_id = $db->get_id();
+        $db->query($sql);
+        $new_id = $db->get_id();
+    }
 
     // Address API requests
     if ($mode == 'xml' || $mode == 'json')

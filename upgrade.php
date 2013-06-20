@@ -13,7 +13,7 @@ include_once('init.php');
 
 /* COMMENT OUT WHEN UPGRADING */
 /* UNCOMMENT ONCE UPDATE IS COMPLETED */
-//$gsod->trigger('Update file locked.');
+$gsod->trigger('Update file locked.');
 
 // Check is config file is present
 if (!file_exists(realpath('config.php')))
