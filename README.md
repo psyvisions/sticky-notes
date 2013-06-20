@@ -7,6 +7,8 @@ copy and share the software and its source code, and you are free to adapt from
 this work. Although you may not remove the original copyright notice whatsoever. 
 For details, please see: http://www.opensource.org/licenses/bsd-license.php
 
+[![](http://www.pledgie.com/campaigns/20549.png?skin_name=chrome)](http://www.pledgie.com/campaigns/20549)
+
 Copyright (c) 2013, Sayak Banerjee <mail@sayakbanerjee.com>
 All rights reserved.
 
