@@ -151,9 +151,14 @@ $lang_data = array(
     'config_cantwrite'          => 'The config file isn\'t writable. Please check file permissions',
     'no_user_ldap'              => 'This module is unavailable when LDAP authentication is in use',
     'changes_saved'             => 'Your changes were saved successfully',
-    'url_key'                    => 'Enable URL key',
-    'url_key_exp'                => 'This feature will create alphanumeric paste URL identifiers. Previously created ' .
+    'url_key'                   => 'Enable URL key',
+    'url_key_exp'               => 'This feature will create alphanumeric paste URL identifiers. Previously created ' .
                                    'numeric identifiers will still work.',
+                                   
+    'url_short_config'       => 'URL shortener configuration',
+    'google_api_key'         => 'Google API Key',
+    'google_api_key_exp'     => 'You can generate an API key at the <a href="https://code.google.com/apis/console">' .
+                               'Google API Console</a>',
 
     /* Page: login.php */
     'admin_login'       => 'Administration Login',

@@ -88,13 +88,13 @@ class nav
     }
 
     // Get the URL for a paste
-    function get_paste($paste_id, $paste_key, $hash, $project, $rss, $format = '')
+    function get_paste($paste_id, $paste_key, $hash, $project, $full_url, $format = '')
     {
         global $core, $config;
         
         try
         {
-            $base_path = $rss ? $core->base_uri() : $core->path();
+            $base_path = $full_url ? $core->base_uri() : $core->path();
             
             // Determine whether to use ID or key
             if ($config->url_key_enabled && !empty($paste_key))

@@ -39,6 +39,9 @@ $lang_data = array(
     'submit'            => 'Submit',
     'invalid_password'  => 'You have entered an incorrect password',
     'share'             => 'Share',
+    'short_get'         => 'Get short URL',
+    'short_generating'  => 'Generating...',
+    'short_error'       => 'Error occurred!',
 
 
     /* Page: list.php */

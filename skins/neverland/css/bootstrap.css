@@ -6183,6 +6183,10 @@ a.badge:hover {
   position: fixed !important;
 }
 
+.inline.visible {
+  display: inline !important;
+}
+
 .align-left {
   text-align: left !important;
 }

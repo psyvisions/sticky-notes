@@ -17,6 +17,7 @@ $config_lang = $core->variable('config_lang', $config->lang_name);
 $config_admin_skin = $core->variable('config_admin_skin', $config->admin_skin_name);
 $config_admin_lang = $core->variable('config_admin_lang', $config->admin_lang_name);
 $config_url_key = $core->variable('config_url_key', $config->url_key_enabled ? 1 : 0);
+$config_google_api_key = $core->variable('config_google_api_key', $config->google_api_key);
 $config_sg_svcs = $core->variable('config_sg_svcs', explode(',', $config->sg_services));
 $config_php_key = $core->variable('config_php_key', $config->sg_php_key);
 $config_php_days = $core->variable('config_php_days', $config->sg_php_days);
@@ -54,6 +55,7 @@ if ($config_save)
         $config->admin_skin_name = $config_admin_skin;
         $config->admin_lang_name = $config_admin_lang;
         $config->url_key_enabled = $config_url_key != 0;
+        $config->google_api_key  = $config_google_api_key;
         
         $config->sg_services     = implode(',', $config_sg_svcs);
         $config->sg_php_key      = $config_php_key;
@@ -91,21 +93,22 @@ foreach ($available_svcs as $svc)
 
 // Assign skin data
 $skin->assign(array(
-    'config_name'         => $config_name,
-    'config_title'        => $config_title,
-    'config_copyright'    => $config_copyright,
-    'config_php_key'      => $config_php_key,
-    'config_php_days'     => $config_php_days,
-    'config_php_score'    => $config_php_score,
-    'config_php_type'     => $config_php_type,
-    'config_censor'       => $config_censor,
-    'config_url_key_yes'  => $skin->checked($config_url_key == 1),
-    'config_url_key_no'   => $skin->checked($config_url_key == 0),
-    'skin_list'           => $skin_list,
-    'lang_list'           => $lang_list,
-    'admin_skin_list'     => $admin_skin_list,
-    'admin_lang_list'     => $admin_lang_list,
-    'sg_svcs'             => $sg_svcs,
+    'config_name'           => $config_name,
+    'config_title'          => $config_title,
+    'config_copyright'      => $config_copyright,
+    'config_php_key'        => $config_php_key,
+    'config_php_days'       => $config_php_days,
+    'config_php_score'      => $config_php_score,
+    'config_php_type'       => $config_php_type,
+    'config_censor'         => $config_censor,
+    'config_url_key_yes'    => $skin->checked($config_url_key == 1),
+    'config_url_key_no'     => $skin->checked($config_url_key == 0),
+    'config_google_api_key' => $config_google_api_key,
+    'skin_list'             => $skin_list,
+    'lang_list'             => $lang_list,
+    'admin_skin_list'       => $admin_skin_list,
+    'admin_lang_list'       => $admin_lang_list,
+    'sg_svcs'               => $sg_svcs,
 ));
 
 // Set the page title

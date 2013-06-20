@@ -26,6 +26,7 @@ class config
     var $admin_skin_name;
     var $admin_lang_name;
     var $url_key_enabled;
+    var $google_api_key;
     
     var $sg_services;
     var $sg_php_key;
@@ -92,6 +93,7 @@ class config
             $this->admin_skin_name = isset($admin_skin_name) ? html_entity_decode($admin_skin_name) : 'Greyscale';
             $this->admin_lang_name = isset($admin_lang_name) ? html_entity_decode($admin_lang_name) : 'en-gb';
             $this->url_key_enabled = isset($url_key_enabled) ? $url_key_enabled : false;
+            $this->google_api_key  = isset($google_api_key) ? html_entity_decode($google_api_key) : '';
 
             $this->sg_services     = isset($sg_services) ? html_entity_decode($sg_services) : 'ipban,noflood,stealth,php,censor';
             $this->sg_php_key      = isset($sg_php_key) ? html_entity_decode($sg_php_key) : '';
@@ -140,7 +142,8 @@ class config
             fwrite($fp, '$lang_name = "' . htmlentities($this->lang_name) . '";' . "\n");
             fwrite($fp, '$admin_skin_name = "' . htmlentities($this->admin_skin_name) . '";' . "\n");
             fwrite($fp, '$admin_lang_name = "' . htmlentities($this->admin_lang_name) . '";' . "\n");
-            fwrite($fp, '$url_key_enabled = ' . ($this->url_key_enabled ? 'true' : 'false') . ';' . "\n\n");
+            fwrite($fp, '$url_key_enabled = ' . ($this->url_key_enabled ? 'true' : 'false') . ';' . "\n");
+            fwrite($fp, '$google_api_key = "' . htmlentities($this->google_api_key) . '";' . "\n\n");
 
             fwrite($fp, '$sg_services = "' . htmlentities($this->sg_services) . '";' . "\n");
             fwrite($fp, '$sg_php_key = "' . htmlentities($this->sg_php_key) . '";' . "\n");
@@ -181,7 +184,7 @@ class config
             fwrite($fp, "// (C) 2013 Sayak Banerjee. All rights reserved\n\n");
             fwrite($fp, "/// This is an auto generated file\n");
             fwrite($fp, "/// Please DO NOT modify manually\n");
-            fwrite($fp, "/// Unless you are absolutely sure what you're doing ;-)\n\n");
+            fwrite($fp, "/// Unless you are absolutely sure what you're doing ;)\n\n");
             
             fwrite($fp, '$db_host = "' . $db_host . '";' . "\n");
             fwrite($fp, '$db_port = "' . $db_port . '";' . "\n");
@@ -200,7 +203,8 @@ class config
             fwrite($fp, '$lang_name = "en-gb";' . "\n");
             fwrite($fp, '$admin_skin_name = "Greyscale";' . "\n");
             fwrite($fp, '$admin_lang_name = "en-gb";' . "\n");
-            fwrite($fp, '$url_key_enabled = false;' . "\n\n");
+            fwrite($fp, '$url_key_enabled = false;' . "\n");
+            fwrite($fp, '$google_api_key = "";' . "\n\n");
 
             fwrite($fp, '$sg_services = "ipban,noflood,stealth,php,censor";' . "\n");
             fwrite($fp, '$sg_php_key = "";' . "\n");

@@ -19,6 +19,7 @@ $project = $core->variable('project', '');
 $password = $core->variable('password', '');
 $mode = strtolower($mode);
 $exempt = false;
+$is_key = false;
 
 // Trim trailing /
 if (strrpos($password, '/') == strlen($password) - 1)
@@ -57,6 +58,10 @@ if (!empty($paste_id))
     {
         $paste_id = intval($paste_id);
         $is_key = false;
+    }
+    else
+    {
+        $paste_id = 0;
     }
 }
 else
@@ -261,19 +266,26 @@ $skin->escape($code_data);
 
 $skin_key = $is_key ? 'p' . $paste_id : $paste_id;
 
+// Save URL shortening language data to cookies
+$core->set_cookie('short_get', $lang->get('short_get'), 365);
+$core->set_cookie('short_generating', $lang->get('short_generating'), 365);
+$core->set_cookie('short_error', $lang->get('short_error'), 365);
+
 // Assign template variables
 $skin->assign(array(
-    'paste_id'          => $skin_key,
-    'paste_data'        => $code_data,
-    'paste_lang'        => htmlspecialchars($row['language']),
-    'paste_info'        => $info,
-    'paste_user'        => $user,
-    'paste_timestamp'   => $row['timestamp'],
-    'raw_url'           => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, false, 'raw'),
-    'share_url'         => urlencode($core->full_uri()),
-    'share_title'       => urlencode($lang->get('paste') . ' #' . $skin_key),
-    'error_visibility'  => 'hidden',
-    'geshi_stylesheet'  => $geshi->get_stylesheet(),
+    'paste_id'           => $skin_key,
+    'paste_data'         => $code_data,
+    'paste_lang'         => htmlspecialchars($row['language']),
+    'paste_info'         => $info,
+    'paste_user'         => $user,
+    'paste_timestamp'    => $row['timestamp'],
+    'raw_url'            => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, false, 'raw'),
+    'share_url'          => urlencode($core->full_uri()),
+    'share_title'        => urlencode($lang->get('paste') . ' #' . $skin_key),
+    'error_visibility'   => 'hidden',
+    'geshi_stylesheet'   => $geshi->get_stylesheet(),
+    'shorten_url'        => $core->base_uri() . "shorten.php?id={$skin_key}&project={$project}&hash={$hash}",
+    'shorten_visibility' => $skin->visibility(empty($config->google_api_key), true),
 ));
 
 // Let's output the page now

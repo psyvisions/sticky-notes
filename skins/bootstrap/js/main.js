@@ -117,4 +117,49 @@ $(document).ready(function() {
 
         return false;
     });
+    
+    // URL shorener logic
+    $('#shorten_url').click(function() {
+        var shortener = $(this).attr('data-shortener');
+        
+        // Get texts for shortener
+        var lang_get = $.cookie('stickynotes_short_get');        
+        var lang_generating = $.cookie('stickynotes_short_generating');
+        var lang_error = $.cookie('stickynotes_short_error');
+
+        if ($(this).html() == lang_error) {
+            return false;
+        }
+        
+        if ($(this).html().indexOf('goo.gl') != -1) {
+            return true;
+        }
+
+        // Get the short URL    
+        $(this).html(lang_generating);
+
+        $.get(shortener, function(data) {
+            if (data != "ERROR") {
+                $('#shorten_url')
+                    .attr('href', data)
+                    .html(data)
+                    .removeClass('btn-info')
+                    .addClass('btn-link');
+            } else {
+                $('#shorten_url')
+                    .html(lang_error)
+                    .removeClass('btn-info')
+                    .addClass('btn-danger disabled');
+                
+                setTimeout(function() {
+                    $('#shorten_url')
+                        .html(lang_get)
+                        .removeClass('btn-danger disabled')
+                        .addClass('btn-info');
+                }, 5000);
+            }
+        });
+
+        return false;
+    });
 });
