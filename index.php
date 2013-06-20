@@ -143,7 +143,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         // We retry 3 times only
         for($unique = 1; $unique <= 3; $unique++)
         {
-            $url_key = substr(sha1(time() . $remote_ip . $salt), 0, 8);
+            $url_key = substr(sha1(time() . $remote_ip . $salt . $unique), 0, 8);
             
             $sql = "SELECT id AS count FROM {$db->prefix}main WHERE urlkey = '{$url_key}'";
             $row = $db->query($sql);
