@@ -25,6 +25,9 @@ if (((time() - $timestamp) > 60) && !$locked)
         // Perform cron tasks
         $db->query("DELETE FROM {$db->prefix}main WHERE expire > 0 AND expire < " . time());
         $db->query("UPDATE {$db->prefix}cron SET timestamp = " . time() . ", locked = 0");
+        
+        // Garbage collection
+        $cache->_gc();
     }
 }
 

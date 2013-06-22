@@ -18,7 +18,6 @@ class skin
     var $skin_path;
     var $skin_vars;
     var $skin_title;
-    var $skin_script;
     var $skin_file;
 
     // Class constructor
@@ -31,7 +30,6 @@ class skin
         $this->skin_name = strtolower($config->skin_name);
         $this->skin_name_fancy = $config->skin_name;
         $this->skin_vars = array();
-        $this->skin_script = array();
         $this->skin_file = '';
         $this->skin_path = $core->path() . 'skins/' . strtolower($config->skin_name);
     }
@@ -71,58 +69,46 @@ class skin
     }
 
     // Function to parse template variables
-    function parse($file_name, $has_scripts = false)
+    function parse($file_name)
     {
-        global $lang, $gsod;
-
-        // First, see if scripts are added
-        if ($has_scripts)
+        global $lang, $gsod, $cache;
+        
+        // Try to get template data from cache
+        $key = json_encode($this->skin_vars);
+        $data = $cache->get($key);
+        
+        // Data not in cache, parse the template file
+        if ($data === false)
         {
-            $tmp_data = ' ';
-
-            foreach($this->skin_script as $script)
+            // Parse template variables
+            if (!file_exists($file_name))
             {
-                $tmp_data .= "\n" . '<script type="text/javascript">' . "\n";
-                $tmp_data .= file_get_contents($script);
-                $tmp_data .= "\n</script>\n";
+                $message  = '<b>Sticky Notes skin read error</b><br /><br />';
+                $message .= 'Error: Skin file not found<br />';
+                $message .= 'Verify that the skin selected is present in the skins/ folder';
+                $gsod->trigger($message);
+            }
+            
+            $data = file_get_contents($file_name);
+            $data = $this->set_defaults($data);
 
-                foreach($this->skin_vars as $key => $value)
-                {
-                    $tmp_data = str_replace("[[$key]]", $value, $tmp_data);
-                }
-
-                $tmp_data = preg_replace('#/\*(?:[^*]*(?:\*(?!/))*)*\*/#', '', $tmp_data);
+            foreach($this->skin_vars as $key => $value)
+            {
+                $data = str_replace("[[$key]]", $value, $data);
             }
 
-            $data = $tmp_data;
-            unset($tmp_data);
+            // Remove unknown placeholders
+            $data = preg_replace('/\[\[(.*?)\]\]/', '', $data);
+            
+            // Apply localization data
+            $data = $lang->parse($data);
+            
+            // Add the data to cache
+            $cache->set($key, $data);
         }
-
-        // Parse template variables
-        if (!file_exists($file_name))
-        {
-            $message  = '<b>Sticky Notes skin read error</b><br /><br />';
-            $message .= 'Error: Skin file not found<br />';
-            $message .= 'Verify that the skin selected is present in the skins/ folder';
-            $gsod->trigger($message);
-        }
-        
-        $data = ($has_scripts ? $data : '') . file_get_contents($file_name);
-        $data = $this->set_defaults($data);
-
-        foreach($this->skin_vars as $key => $value)
-        {
-            $data = str_replace("[[$key]]", $value, $data);
-        }
-
-        // Remove unknown placeholders
-        $data = preg_replace('/\[\[(.*?)\]\]/', '', $data);
-        
-        // Apply localization data
-        $data = $lang->parse($data);
 
         // Done!
-        return trim($data);
+        return $data;
     }
 
     // Function to assign default variables
@@ -180,17 +166,6 @@ class skin
         $data = str_replace("[[header_tagline]]", $header_tagline, $data);
 
         return $data;
-    }
-
-    // Function to add a script
-    function script($file_name)
-    {
-        global $mode;
-
-        if (!$mode)
-        {
-            $this->skin_script[] = realpath('skins/' . $this->skin_name . '/js/' . $file_name);
-        }
     }
 
     // Function to get full path of file

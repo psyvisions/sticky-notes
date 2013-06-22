@@ -18,6 +18,7 @@ define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSI
 include_once('classes/class_gsod.php');
 include_once('classes/class_config.php');
 include_once('classes/class_core.php');
+include_once('classes/class_cache.php');
 include_once('classes/class_db.php');
 include_once('classes/class_lang.php');
 include_once('classes/class_skin.php');
@@ -32,6 +33,7 @@ $gsod = new gsod();
 // Instantiate general classes
 $config = new config();
 $core = new core();
+$cache = new cache();
 $db = new db();
 $lang = new lang();
 $skin = new skin();
@@ -45,7 +47,6 @@ if (defined('IN_ADMIN'))
     include_once('admin/classes/class_auth.php');
     include_once('admin/classes/class_module.php');
 
-    // Instantiate admin classes
     $auth = new auth();
     $module = new module();
 }
