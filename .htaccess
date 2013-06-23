@@ -24,17 +24,21 @@ php_flag magic_quotes_gpc off
     RewriteRule ^~([a-z.]+)/?$ index.php?project=$1 [NC]
     RewriteRule ^~([a-z.]+)/api/([a-z]+)/?$ index.php?project=$1&mode=$2 [NC]
 
-    # Paste list
+    # Paste list, trending and RSS
     RewriteRule ^all/?$ list.php [NC]
     RewriteRule ^api/([a-z]+)/all/?$ list.php?mode=$1 [NC]
     RewriteRule ^~([a-z.]+)/all/?$ list.php?project=$1 [NC]
     RewriteRule ^~([a-z.]+)/api/([a-z]+)/all/?$ list.php?project=$1&mode=$2 [NC]
-    RewriteRule ^rss/?$ list.php?rss=1 [NC]
-    RewriteRule ^~([a-z.]+)/rss/?$ list.php?project=$1&rss=1 [NC]
     RewriteRule ^all/([0-9]+)/?$ list.php?page=$1 [NC]
     RewriteRule ^api/([a-z]+)/all/([0-9]+)/?$ list.php?mode=$1&page=$2 [NC]
     RewriteRule ^~([a-z.]+)/all/([0-9]+)/?$ list.php?project=$1&page=$2 [NC]
     RewriteRule ^~([a-z.]+)/api/([a-z]+)/all/([0-9]+)/?$ list.php?project=$1&mode=$2&page=$3 [NC]
+    RewriteRule ^trending/([a-z]+)/?$ list.php?trending=1&age=$1 [NC]
+    RewriteRule ^~([a-z.]+)/trending/([a-z]+)/?$ list.php?project=$1&trending=1&age=$2 [NC]
+    RewriteRule ^trending/?$ list.php?trending=1 [NC]
+    RewriteRule ^~([a-z.]+)/trending/?$ list.php?project=$1&trending=1 [NC]
+    RewriteRule ^rss/?$ list.php?rss=1 [NC]
+    RewriteRule ^~([a-z.]+)/rss/?$ list.php?project=$1&rss=1 [NC]
 
     # General links
     RewriteRule ^([0-9]+|p[0-9a-zA-Z]{8})/?$ show.php?id=$1 [NC]

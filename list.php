@@ -15,6 +15,8 @@ include_once('init.php');
 $project = $core->variable('project', '');
 $page = $core->variable('page', 1);
 $mode = $core->variable('mode', '');
+$trending = $core->variable('trending', 0) == 1;
+$age = $core->variable('age', '');
 $rss = $core->variable('rss', false);
 
 if (empty($mode))
@@ -61,21 +63,57 @@ else
 // Escape the project
 $db->escape($project);
 
-// Get total number of posts
-$sql = "SELECT COUNT(id) AS total FROM {$db->prefix}main WHERE " .
-       (!empty($project) ? "project = '{$project}' AND " : '') .
-       'private = 0';
-$row = $db->query($sql);
-$total = $row[0]['total'];
+// Build the WHERE and ORDER BY claus
+$sql_where = 'private = 0' . (!empty($project) ? " AND project = '{$project}'" : '');
+$sql_order = 'timestamp DESC';
+$sql_limit = "{$lim_start}, 10";
 
-// Get page numbers
+if ($trending)
+{
+    $trend_time = 259200;
+
+    if ($age == 'week')
+    {
+        $trend_time = 1814400;
+    }
+    else if ($age == 'month')
+    {
+        $trend_time = 7776000;
+    }
+    else if ($age == 'year')
+    {
+        $trend_time = 94608000;
+    }
+    else if ($age == 'all')
+    {
+        $trend_time = 0;
+    }
+
+    if ($trend_time > 0)
+    {
+        $sql_where .= " AND timestamp >= " . (time() - $trend_time);
+        $sql_order = 'hits DESC';
+        $sql_limit = '10';
+    }
+}
+
+// Get total number of posts and page numbers
+if (!$trending)
+{
+    $sql = "SELECT COUNT(id) AS total FROM {$db->prefix}main WHERE {$sql_where}";
+    $row = $db->query($sql);
+    $total = $row[0]['total'];
+}
+else
+{
+    $total = 10;
+}
+
 $pagination = $skin->pagination($total, $page);
 
 // Get the list
-$sql = "SELECT * FROM {$db->prefix}main WHERE " .
-       (!empty($project) ? "project = '{$project}' AND " : '') .
-       'private = 0 ORDER BY timestamp ' .
-       "DESC LIMIT {$lim_start}, 10";
+$sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where} " .
+       "ORDER BY {$sql_order} LIMIT {$sql_limit}";
 $rows = $db->query($sql);
 $rowcount = count($rows);
 
@@ -202,9 +240,18 @@ $skin->assign(array(
     'paste_count'       => $rowcount,
     'paste_pages'       => ceil($total / 10),
     'error_text'        => $lang->get('no_pastes'),
+    'list_title'        => $trending ? $lang->get('trending') : $lang->get('archives'),
+    'list_icon'         => $trending ? 'trending' : 'archives',
     'list_data'         => $output_data,
     'list_pagination'   => $pagination,
     'feed_time'         => $published,
+    'filter_visibility' => $skin->visibility($trending),
+    'pages_visibility'  => $skin->visibility($trending, true),
+    'trending_now'      => $nav->get('nav_trending', $project),
+    'trending_week'     => $nav->get('nav_trending', $project, $page, 'week'),
+    'trending_month'    => $nav->get('nav_trending', $project, $page, 'month'),
+    'trending_year'     => $nav->get('nav_trending', $project, $page, 'year'),
+    'trending_all'      => $nav->get('nav_trending', $project, $page, 'all'),
 ));
 
 // Output the page
@@ -214,7 +261,9 @@ if ($rss || $mode)
 }
 else
 {
-    $skin->title($lang->get('paste_archive') . ' &bull; ' . $lang->get('site_title'));
+    $title = $trending ? $lang->get('trending') : $lang->get('paste_archive');
+
+    $skin->title($title . ' &bull; ' . $lang->get('site_title'));
     $skin->output();
 }
 

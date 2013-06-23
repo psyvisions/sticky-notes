@@ -78,14 +78,14 @@ $db->escape($paste_id);
 // Build the query based on whether a key or ID was used
 if ($is_key)
 {
-    $sql_where = "urlkey = '{$paste_id}' LIMIT 1";
+    $sql_where = "urlkey = '{$paste_id}'";
 }
 else
 {
-    $sql_where = "id = {$paste_id} LIMIT 1";
+    $sql_where = "id = {$paste_id}";
 }
 
-$sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where}";
+$sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where} LIMIT 1";
 $row = $db->query($sql, true);
 
 // If we queried using an ID, we show the paste only if there is no corresponding
@@ -242,7 +242,12 @@ $hit_time = $cache->get($hit_key);
 if ($hit_time === false)
 {
     $sql = "UPDATE {$db->prefix}main SET hits = hits + 1 WHERE {$sql_where}";
-    $cache->set($hit_key, time());
+    $db->query($sql);
+
+    if ($db->affected_rows() == 1)
+    {
+        $cache->set($hit_key, time());
+    }
 }
 
 // Is it raw mode? just dump the code then

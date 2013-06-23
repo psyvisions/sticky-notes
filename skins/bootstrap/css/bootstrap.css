@@ -2334,6 +2334,10 @@ button.btn.small, input[type="submit"].btn.small {
   color: #ffffff;
   background-color: #0088cc;
 }
+.nav-pills > li.nav-text {
+  font-weight: bold;
+  padding: 8px;
+}
 .nav-stacked > li {
   float: none;
 }

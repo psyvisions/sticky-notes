@@ -34,7 +34,7 @@ class nav
     }
 
     // Gets a root navigation path
-    function get($nav_key, $project = '', $page = 1)
+    function get($nav_key, $project = '', $page = 1, $age = '')
     {
         try
         {
@@ -42,15 +42,20 @@ class nav
 
             // Set URL bases
             $base = $core->path();
-            $project_arg = !empty($project) ? '?project=' . $project : '?';
-            $page_arg = $page > 1 ? "&page={$page}" : ""; 
+
+            $arg_project = !empty($project) ? '?project=' . $project : '?';
+            $arg_page = $page > 1 ? "&page={$page}" : ""; 
+            $arg_age = !empty($age) ? "&age={$age}" : "";
+
             $rewrite_base = $core->path() . (!empty($project) ? "~{$project}/" : "");
             $rewrite_page = $page > 1 ? "{$page}/" : "";
+            $rewrite_age = !empty($age) ? "{$age}/" : "";
 
             // URLs when rewrite is enabled
             $rewrite_ary = array(
                 'nav_newpaste'      => $rewrite_base,
                 'nav_archives'      => "{$rewrite_base}all/{$rewrite_page}",
+                'nav_trending'      => "{$rewrite_base}trending/{$rewrite_age}",
                 'nav_rss'           => "{$rewrite_base}rss/",
                 'nav_api'           => "{$rewrite_base}doc/api/",
                 'nav_help'          => "{$rewrite_base}doc/help/",
@@ -60,12 +65,13 @@ class nav
 
             // URLs when rewrite is disabled
             $general_ary = array(
-                'nav_newpaste'      => "{$base}{$project_arg}",
-                'nav_archives'      => "{$base}list.php{$project_arg}{$page_arg}",
-                'nav_rss'           => "{$base}list.php{$project_arg}&rss=1",
-                'nav_api'           => "{$base}doc.php{$project_arg}&cat=api",
-                'nav_help'          => "{$base}doc.php{$project_arg}&cat=help",
-                'nav_about'         => "{$base}doc.php{$project_arg}&cat=about",
+                'nav_newpaste'      => "{$base}{$arg_project}",
+                'nav_archives'      => "{$base}list.php{$arg_project}{$arg_page}",
+                'nav_trending'      => "{$base}list.php{$arg_project}{$arg_age}&trending=1",
+                'nav_rss'           => "{$base}list.php{$arg_project}&rss=1",
+                'nav_api'           => "{$base}doc.php{$arg_project}&cat=api",
+                'nav_help'          => "{$base}doc.php{$arg_project}&cat=help",
+                'nav_about'         => "{$base}doc.php{$arg_project}&cat=about",
                 'nav_admin'         => "{$base}admin/",
             );
 

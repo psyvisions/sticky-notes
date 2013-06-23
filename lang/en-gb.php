@@ -49,6 +49,12 @@ $lang_data = array(
     'no_pastes'         => 'No pastes found',
     'view_paste'        => 'View paste &raquo;',
     'pages'             => 'Pages',
+    'right_now'         => 'Right now',
+    'last_week'         => 'Last 7 days',
+    'last_month'        => 'Last 30 days',
+    'last_year'         => 'Last 365 days',
+    'all_time'          => 'All time',
+    'filter'            => 'Filter',
 
 
     /* RSS */
@@ -74,8 +80,8 @@ $lang_data = array(
     'about'             => 'About',
     'help'              => 'Help',
     'admin'             => 'Admin',
-    'kde_links'         => 'KDE Links',
     'anonymous'         => 'Anonymous',
+    'trending'          => 'Trending',
 
 
     /* Documentation: api */

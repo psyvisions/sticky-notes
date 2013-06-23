@@ -132,6 +132,7 @@ class skin
         $data = str_replace("[[nav_home_rss]]", $core->base_uri(), $data);
         $data = str_replace("[[nav_newpaste]]", $nav->get('nav_newpaste', $project), $data);
         $data = str_replace("[[nav_archives]]", $nav->get('nav_archives', $project), $data);
+        $data = str_replace("[[nav_trending]]", $nav->get('nav_trending', $project), $data);
         $data = str_replace("[[nav_rss]]", $nav->get('nav_rss', $project), $data);
         $data = str_replace("[[nav_api]]", $nav->get('nav_api', $project), $data);
         $data = str_replace("[[nav_help]]", $nav->get('nav_help', $project), $data);
