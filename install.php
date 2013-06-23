@@ -73,6 +73,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "hash INT(12) UNSIGNED NOT NULL, " .
            "ip VARCHAR(50) NOT NULL, " .
            "urlkey VARCHAR(8) DEFAULT '', " .
+           "hits INT(11) NOT NULL DEFAULT 0, " .
            "PRIMARY KEY(id)) ENGINE = MyISAM");
 
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}session (" .

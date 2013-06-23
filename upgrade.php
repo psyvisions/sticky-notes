@@ -42,7 +42,9 @@ foreach ($db_fields as $field)
 }
 
 // Check if the tables already exist
-$sql = "ALTER TABLE {$db->prefix}main ADD urlkey VARCHAR(8) DEFAULT ''";
+$sql = "ALTER TABLE {$db->prefix}main ADD (" .
+       "urlkey VARCHAR(8) DEFAULT '', " .
+       "hits INT(11) NOT NULL DEFAULT 0)";
 $db->query($sql);
 
 // Create indexes

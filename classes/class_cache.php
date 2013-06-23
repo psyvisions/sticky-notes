@@ -68,8 +68,8 @@ class cache
                {  
                     $age = time() - filectime("{$this->cache_dir}{$file}");
 
-                    // Delete files older than a week
-                    if ($age > 604800)
+                    // Delete files older than a day
+                    if ($age > 86400)
                     {
                         @unlink("{$this->cache_dir}{$file}");
                     }
@@ -80,4 +80,5 @@ class cache
         }
     }
 }
+
 ?>
