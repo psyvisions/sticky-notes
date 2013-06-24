@@ -7009,7 +7009,7 @@ ul.unstyled, ol.unstyled {
   margin-bottom: 0px !important;
 }
 
-.imagefix img {
+.imagefix img, .trend-filter {
   margin-bottom: -3px;
 }
 
