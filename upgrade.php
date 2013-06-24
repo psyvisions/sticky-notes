@@ -43,6 +43,7 @@ foreach ($db_fields as $field)
 
 // Check if the tables already exist
 $sql = "ALTER TABLE {$db->prefix}main ADD (" .
+       "title VARCHAR(25) DEFAULT '', " .
        "urlkey VARCHAR(8) DEFAULT '', " .
        "hits INT(11) NOT NULL DEFAULT 0)";
 $db->query($sql);

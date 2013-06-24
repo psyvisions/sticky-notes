@@ -26,6 +26,8 @@ $lang_data = array(
     'del_1week'         => 'Delete after 1 week',
     'del_1month'        => 'Delete after 1 month',
     'keep_forever'      => 'Keep paste forever',
+    'paste_title'       => 'Paste title',
+    'paste_body'        => 'Paste body',
 
 
     /* Page: show.php */

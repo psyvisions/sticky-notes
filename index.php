@@ -14,6 +14,7 @@ include_once('init.php');
 // Collect some data
 $author = $core->variable('paste_user', '');
 $language = $core->variable('paste_lang', 'text');
+$title = $core->variable('paste_title', '');
 $data = $core->variable('paste_data', '');
 $expire = $core->variable('paste_expire', 604800);
 $password = $core->variable('paste_password', '');
@@ -119,6 +120,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     $db->escape($author);
     $db->escape($project);
     $db->escape($expire);
+    $db->escape($title);
     $db->escape($data);
     $db->escape($language);
     $db->escape($private);
@@ -164,10 +166,10 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     {
         // Insert into the DB
         $sql = "INSERT INTO {$db->prefix}main " .
-               "(author, project, timestamp, expire, data, language, " .
+               "(author, project, timestamp, expire, title, data, language, " .
                "password, salt, private, hash, ip, urlkey) VALUES " .
-               "('{$author}', '{$project}', {$time}, {$expire}" .
-               ", '{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
+               "('{$author}', '{$project}', {$time}, {$expire}, '{$title}', " .
+               "'{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
                ($private == "on" || $private == "yes" || $password ? "1" : "0") .
                ", {$hash}, '{$remote_ip}', '{$url_key}')";
 
@@ -237,6 +239,7 @@ else
     // Assign template data
     $skin->assign(array(
         'post_user'             => htmlspecialchars($author),
+        'post_title'            => htmlspecialchars($title),
         'post_data'             => htmlspecialchars($data),
         'post_' . $language     => 'selected="selected"',
         'post_checked'          => ($private == "on" ? "checked" : ""),

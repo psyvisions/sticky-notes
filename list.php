@@ -183,11 +183,22 @@ foreach ($rows as $row)
     {
         $key = $row['id'];
     }
+    
+    // Format the paste title   
+    if (!empty($row['title']))
+    {
+        $title = htmlspecialchars($row['title']);
+    }
+    else
+    {
+        $title = $lang->get('paste') . " #{$key}";
+    }
 
     // Assign template variables
     $skin->assign(array(
         'paste_id'          => $key,
         'paste_url'         => $nav->get_paste($row['id'], $row['urlkey'], null, $project, $rss),
+        'paste_title'       => $title,
         'paste_data'        => $code_data,
         'paste_lang'        => htmlspecialchars($row['language']),
         'paste_info'        => $info,

@@ -289,9 +289,20 @@ $core->set_cookie('short_get', $lang->get('short_get'), 365);
 $core->set_cookie('short_generating', $lang->get('short_generating'), 365);
 $core->set_cookie('short_error', $lang->get('short_error'), 365);
 
+// Format the paste title   
+if (!empty($row['title']))
+{
+    $title = htmlspecialchars($row['title']);
+}
+else
+{
+    $title = $lang->get('paste') . " #{$skin_key}";
+}
+
 // Assign template variables
 $skin->assign(array(
     'paste_id'           => $skin_key,
+    'paste_title'        => $title,
     'paste_data'         => $code_data,
     'paste_lang'         => htmlspecialchars($row['language']),
     'paste_info'         => $info,
@@ -307,7 +318,7 @@ $skin->assign(array(
 ));
 
 // Let's output the page now
-$skin->title("#{$skin_key} &bull; " . $lang->get('site_title'));
+$skin->title("{$title} &bull; " . $lang->get('site_title'));
 
 if ($mode == 'raw')
 {

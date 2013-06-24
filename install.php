@@ -65,6 +65,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "project VARCHAR(50) DEFAULT '', " .
            "timestamp INT(11) UNSIGNED NOT NULL, " .
            "expire INT(11) UNSIGNED NOT NULL, " .
+           "title VARCHAR(25) DEFAULT '', " .
            "data MEDIUMTEXT NOT NULL, " .
            "language VARCHAR(50) NOT NULL DEFAULT 'php', " .
            "password VARCHAR(40) NOT NULL, " .

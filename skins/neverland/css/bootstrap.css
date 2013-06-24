@@ -6985,8 +6985,7 @@ ul.unstyled, ol.unstyled {
 }
 
 .codebox {
-  width: 99%;
-  min-height: 300px;
+  min-height: 300px !important;
 }
 
 .monospace {
