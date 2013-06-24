@@ -190,11 +190,11 @@ class skin
 
         if (strpos($file, 'api') !== false && strpos($file, 'api') == 0)
         {
-            return realpath('api/' . $file);
+            return realpath('templates/api/' . $file);
         }
         else if (strpos($file, 'rss') !== false && strpos($file, 'rss') == 0)
         {
-            return realpath('rss/' . $file);
+            return realpath('templates/rss/' . $file);
         }
         else if ($admin_skin)
         {
