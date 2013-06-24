@@ -397,6 +397,17 @@ class skin
 
         return $condition ? 'visible' : 'hidden';
     }
+
+    // Return active state based on condition
+    function active($condition, $invert = false)
+    {
+        if ($invert)
+        {
+            $condition = !$condition;
+        }
+
+        return $condition ? 'active' : '';
+    }
 }
 
 ?>

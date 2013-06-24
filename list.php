@@ -263,6 +263,11 @@ $skin->assign(array(
     'trending_month'    => $nav->get('nav_trending', $project, $page, 'month'),
     'trending_year'     => $nav->get('nav_trending', $project, $page, 'year'),
     'trending_all'      => $nav->get('nav_trending', $project, $page, 'all'),
+    'tr_active_now'     => $skin->active(empty($age)),
+    'tr_active_week'    => $skin->active($age == 'week'),
+    'tr_active_month'   => $skin->active($age == 'month'),
+    'tr_active_year'    => $skin->active($age == 'year'),
+    'tr_active_all'     => $skin->active($age == 'all'),
 ));
 
 // Output the page
