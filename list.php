@@ -15,9 +15,9 @@ include_once('init.php');
 $project = $core->variable('project', '');
 $page = $core->variable('page', 1);
 $mode = $core->variable('mode', '');
-$trending = $core->variable('trending', 0) == 1;
 $age = $core->variable('age', '');
 $rss = $core->variable('rss', false);
+$trending = $core->variable('trending', false);
 
 if (empty($mode))
 {
