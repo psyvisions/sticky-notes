@@ -260,13 +260,37 @@ if ($mode == 'raw')
     exit;
 }
 
-// Prepare GeSHi
-$geshi = new GeSHi($row['data'], $row['language']);
-$geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
-$geshi->set_header_type(GESHI_HEADER_DIV);
-$geshi->set_line_style('background: #f7f7f7; text-shadow: 0px 1px #fff; padding: 1px;',
-                       'background: #fbfbfb; text-shadow: 0px 1px #fff; padding: 1px;');
-$geshi->set_overall_style('word-wrap:break-word;');
+// Syntax highlighting - only for web interfaces
+if (empty($mode))
+{
+    // Check if the GeSHi output was cached
+    $geshi_key = $row['data'] . $row['language'];
+    $code_data = $cache->get($geshi_key . 'data');
+    $code_style = $cache->get($geshi_key . 'style');
+
+    if ($code_data === false || $code_style === false)
+    {
+        // Configure GeSHi
+        $geshi = new GeSHi($row['data'], $row['language']);
+        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+        $geshi->set_header_type(GESHI_HEADER_DIV);
+        $geshi->set_line_style('background: #f7f7f7; text-shadow: 0px 1px #fff; padding: 1px;',
+                               'background: #fbfbfb; text-shadow: 0px 1px #fff; padding: 1px;');
+        $geshi->set_overall_style('word-wrap:break-word;');
+
+        // Run GeSHi
+        $code_data = $geshi->parse_code();
+        $code_style = $geshi->get_stylesheet(true);
+
+        $cache->set($geshi_key . 'data', $code_data);
+        $cache->set($geshi_key . 'style', $code_style);
+    }
+}
+else
+{
+    $code_data = htmlspecialchars($row['data']);
+    $code_style = '';
+}
 
 // Generate the data
 $user = empty($row['author']) ? $lang->get('anonymous') : htmlspecialchars($row['author']);
@@ -277,8 +301,6 @@ $info = preg_replace('/\_\_user\_\_/', $user, $info);
 $info = preg_replace('/\_\_time\_\_/', $time, $info);
 
 // Before we display, we need to escape the data from the skin/lang parsers
-$code_data = (empty($mode) ? $geshi->parse_code() : htmlspecialchars($row['data']));
-
 $lang->escape($code_data);
 $skin->escape($code_data);
 
@@ -318,7 +340,7 @@ $skin->assign(array(
     'share_url'          => urlencode($core->full_uri()),
     'share_title'        => urlencode($lang->get('paste') . ' #' . $skin_key),
     'error_visibility'   => 'hidden',
-    'geshi_stylesheet'   => $geshi->get_stylesheet(),
+    'geshi_stylesheet'   => $code_style,
     'shorten_url'        => $core->base_uri() . "shorten.php?id={$skin_key}&project={$project}&hash={$hash}",
     'shorten_visibility' => $skin->visibility(empty($config->google_api_key), true),
 ));

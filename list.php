@@ -138,13 +138,37 @@ foreach ($rows as $row)
         $row['data'] = substr($row['data'], 0, strlen($row['data']) - 2);
     }    
 
-    // Configure GeSHi
-    $geshi = new GeSHi($row['data'], $row['language']);
-    $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
-    $geshi->set_header_type(GESHI_HEADER_DIV);
-    $geshi->set_line_style('background: #f7f7f7; text-shadow: 0px 1px #fff; padding: 1px;',
-                           'background: #fbfbfb; text-shadow: 0px 1px #fff; padding: 1px;');
-    $geshi->set_overall_style('word-wrap:break-word;');
+    // Syntax highlighting - only for web interface
+    if (!$rss)
+    {
+        // Check if the GeSHi output was cached
+        $geshi_key = $row['data'] . $row['language'];
+        $code_data = $cache->get($geshi_key . 'data');
+        $code_style = $cache->get($geshi_key . 'style');
+
+        if ($code_data === false || $code_style === false)
+        {
+            // Configure GeSHi
+            $geshi = new GeSHi($row['data'], $row['language']);
+            $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+            $geshi->set_header_type(GESHI_HEADER_DIV);
+            $geshi->set_line_style('background: #f7f7f7; text-shadow: 0px 1px #fff; padding: 1px;',
+                                   'background: #fbfbfb; text-shadow: 0px 1px #fff; padding: 1px;');
+            $geshi->set_overall_style('word-wrap:break-word;');
+
+            // Run GeSHi
+            $code_data = $geshi->parse_code();
+            $code_style = $geshi->get_stylesheet(true);
+
+            $cache->set($geshi_key . 'data', $code_data);
+            $cache->set($geshi_key . 'style', $code_style);
+        }
+    }
+    else
+    {
+        $code_data = nl2br(htmlspecialchars($row['data']));
+        $code_style = '';
+    }
 
     // Generate the data
     $user = empty($row['author']) ? $lang->get('anonymous') : htmlspecialchars($row['author']);
@@ -161,9 +185,7 @@ foreach ($rows as $row)
         $published = $time;
     }    
 
-    // Before we display, we need to escape the data from the skin/lang parsers
-    $code_data = (!$rss ? $geshi->parse_code() : nl2br(htmlspecialchars($row['data'])));
-    
+    // Before we display, we need to escape the data from the skin/lang parsers    
     if ($rss)
     {        
         $core->rss_encode($code_data);
@@ -205,7 +227,7 @@ foreach ($rows as $row)
         'paste_time'        => $time,
         'paste_timestamp'   => $timestamp,
         'error_visibility'  => 'hidden',
-        'geshi_stylesheet'  => $geshi->get_stylesheet(),
+        'geshi_stylesheet'  => $code_style,
     ));
 
     if ($rss)
