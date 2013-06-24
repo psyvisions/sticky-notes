@@ -74,8 +74,8 @@ class skin
         global $lang, $gsod, $cache;
         
         // Try to get template data from cache
-        $key = json_encode($this->skin_vars);
-        $data = $cache->get($key);
+        $cache_key = json_encode($this->skin_vars) . $file_name;
+        $data = $cache->get($cache_key);
         
         // Data not in cache, parse the template file
         if ($data === false)
@@ -104,7 +104,7 @@ class skin
             $data = $lang->parse($data);
             
             // Add the data to cache
-            $cache->set($key, $data);
+            $cache->set($cache_key, $data);
         }
 
         // Done!
@@ -140,7 +140,7 @@ class skin
         $data = str_replace("[[nav_admin]]", $nav->get('nav_admin'), $data);
 
         // Set the tagline
-        $header_tagline = '~/paste';
+        $header_tagline = '~/' . $lang->get('tag_paste');
 
         if (!empty($project))
         {
@@ -157,11 +157,18 @@ class skin
         }
         else if (strpos($core->script_name(), 'list.php') !== false)
         {
-            $header_tagline .= '/all';
+            if ($core->variable('trending', 0) == 1)
+            {
+                $header_tagline .= ('/' . $lang->get('tag_trending'));
+            }
+            else
+            {
+                $header_tagline .= ('/' . $lang->get('tag_all'));
+            }
         }
         else if (strpos($core->script_name(), 'doc.php') !== false)
         {
-            $header_tagline .= '/documentation';
+            $header_tagline .= ('/' . $lang->get('tag_documentation'));
         }
 
         $data = str_replace("[[header_tagline]]", $header_tagline, $data);

@@ -45,7 +45,7 @@ class cache
         if ($this->is_available)
         {
             $filename = $this->cache_dir . 's_' . md5($key) . '.html';
-            
+
             if (file_exists($filename))
             {
                 return file_get_contents($filename);

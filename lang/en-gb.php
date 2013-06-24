@@ -84,6 +84,10 @@ $lang_data = array(
     'admin'             => 'Admin',
     'anonymous'         => 'Anonymous',
     'trending'          => 'Trending',
+    'tag_paste'         => 'paste',
+    'tag_trending'      => 'trending',
+    'tag_all'           => 'all',
+    'tag_documentation' => 'documentation',
 
 
     /* Documentation: api */
