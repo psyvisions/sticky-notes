@@ -5,6 +5,7 @@
         "author": "[[paste_user]]",
         "timestamp": "[[paste_timestamp]]",
         "language": "[[paste_lang]]",
+        "title": "[[paste_title]]",
         "data": "[[paste_data]]"
     }
 }

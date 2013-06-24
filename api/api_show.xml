@@ -4,5 +4,6 @@
     <author>[[paste_user]]</author>
     <timestamp>[[paste_timestamp]]</timestamp>
     <language>[[paste_lang]]</language>
-    <data>[[paste_data]]</data>
+    <title>[[paste_title]]</title>
+    <data><![CDATA[[[paste_data]]]]></data>
 </result>

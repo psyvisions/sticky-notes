@@ -282,6 +282,12 @@ $code_data = (empty($mode) ? $geshi->parse_code() : htmlspecialchars($row['data'
 $lang->escape($code_data);
 $skin->escape($code_data);
 
+// Nullify newlines in API output
+if ($mode != 'raw')
+{
+    $code_data = preg_replace('/\\n|\\r\\n/', '\\\\n', $code_data);
+}
+
 $skin_key = $is_key ? 'p' . $paste_id : $paste_id;
 
 // Save URL shortening language data to cookies
