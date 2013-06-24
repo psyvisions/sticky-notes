@@ -283,7 +283,7 @@ $lang->escape($code_data);
 $skin->escape($code_data);
 
 // Nullify newlines in API output
-if ($mode != 'raw')
+if (!empty($mode) && $mode != 'raw')
 {
     $code_data = preg_replace('/\\n|\\r\\n/', '\\\\n', $code_data);
 }
@@ -330,7 +330,7 @@ if ($mode == 'raw')
 {
     $skin->output(false, true);
 }
-else if ($mode)
+else if (!empty($mode))
 {
     echo $skin->output("api_show.{$mode}");
 }
