@@ -29,7 +29,7 @@ class nav
         }
         else
         {
-            return getenv('HTTP_MOD_REWRITE') == 'On';
+            return false;
         }
     }
 
