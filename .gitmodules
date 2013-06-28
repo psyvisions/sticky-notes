@@ -1,0 +1,3 @@
+[submodule "testing/awt-util"]
+	path = testing/awt-util
+	url = https://github.com/sayakb/awt-util.git
