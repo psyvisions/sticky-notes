@@ -4,6 +4,7 @@ Version 0.4
  * Add support for goo.gl URL shortener
  * Performance improvements through template caching
  * Trending pastes functinality
+ * Allow users to use a paste title
  * Fix newline issues in JSON and use CDATA in XML
  * Add automated testing capabilities
 
