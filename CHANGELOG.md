@@ -3,9 +3,10 @@ Version 0.4
  * Add support for alphanumeric paste IDs
  * Add support for goo.gl URL shortener
  * Performance improvements through template caching
- * Trending pastes functinality
- * Allow users to use a paste title
- * Fix newline issues in JSON and use CDATA in XML
+ * Issue #10 - Trending pastes functinality
+ * Issue #9 - Allow users to use a paste title
+ * Issue #5 - Fix newline issue in JSON
+ * Use a CDATA block for the XML data response
  * Add automated testing capabilities
 
 Version 0.3
