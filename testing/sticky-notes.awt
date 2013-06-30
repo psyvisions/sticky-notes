@@ -1,326 +1,345 @@
 {
-   "baseUrl":"http://localhost/sticky-notes/",
-   "testCases":[
+   "baseUrl": "http://localhost/sticky-notes/",
+   "testCases": [
       {
-         "id":1,
-         "name":"UI - Check theme selection",
-         "url":"doc.php",
-         "parent":0,
-         "method":"GET",
-         "request":{
-            "cat":"about"
+         "id": 1,
+         "name": "UI - Check theme selection",
+         "url": "doc.php",
+         "parent": 0,
+         "method": "GET",
+         "request": {
+            "cat": "about"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"Theme name: Bootstrap",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "Theme name: Bootstrap",
+               "exact": false
             }
          ]
       },
       {
-         "id":2,
-         "name":"UI - Screens - Index page",
-         "url":"index.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
+         "id": 2,
+         "name": "UI - Screens - Index page",
+         "url": "index.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
 
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"~/paste",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "~/paste",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"placeholder=&quot;Paste title&quot;",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "placeholder=&quot;Paste title&quot;",
+               "exact": false
             },
             {
-               "id":3,
-               "selector":"",
-               "value":"placeholder=&quot;Paste body&quot;",
-               "exact":false
+               "id": 3,
+               "selector": "",
+               "value": "placeholder=&quot;Paste body&quot;",
+               "exact": false
             },
             {
-               "id":4,
-               "selector":"",
-               "value":"2013 <a href=&quot;http://sayakbanerjee.com&quot;>Sayak Banerjee</a>",
-               "exact":false
+               "id": 4,
+               "selector": "",
+               "value": "2013 <a href=&quot;http://sayakbanerjee.com&quot;>Sayak Banerjee</a>",
+               "exact": false
             }
          ]
       },
       {
-         "id":3,
-         "name":"UI - Screens - Paste list",
-         "url":"list.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
+         "id": 3,
+         "name": "UI - Screens - Paste list",
+         "url": "list.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
 
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"Archives",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "Archives",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"images/archives.png",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "images/archives.png",
+               "exact": false
             }
          ]
       },
       {
-         "id":4,
-         "name":"UI - Screens - Trending pastes",
-         "url":"list.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
-            "trending":"1"
+         "id": 4,
+         "name": "UI - Screens - Trending pastes",
+         "url": "list.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
+            "trending": "1"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"Trending",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "Trending",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"images/trending.png",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "images/trending.png",
+               "exact": false
             }
          ]
       },
       {
-         "id":5,
-         "name":"UI - Screens - API docs",
-         "url":"doc.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
-            "cat":"api"
+         "id": 5,
+         "name": "UI - Screens - API docs",
+         "url": "doc.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
+            "cat": "api"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"Sticky Notes • API",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "Sticky Notes • API",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"images/api.png",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "images/api.png",
+               "exact": false
             }
          ]
       },
       {
-         "id":6,
-         "name":"UI - Screens - Help",
-         "url":"doc.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
-            "cat":"help"
+         "id": 6,
+         "name": "UI - Screens - Help",
+         "url": "doc.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
+            "cat": "help"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"Sticky Notes • Help",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "Sticky Notes • Help",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"images/help.png",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "images/help.png",
+               "exact": false
             }
          ]
       },
       {
-         "id":7,
-         "name":"UI - Screens - About",
-         "url":"doc.php",
-         "parent":1,
-         "method":"GET",
-         "request":{
-            "cat":"about"
+         "id": 7,
+         "name": "UI - Screens - About",
+         "url": "doc.php",
+         "parent": 1,
+         "method": "GET",
+         "request": {
+            "cat": "about"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"Sticky Notes • About",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "Sticky Notes • About",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"images/about.png",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "images/about.png",
+               "exact": false
             }
          ]
       },
       {
-         "id":8,
-         "name":"FUNC - Create public paste",
-         "url":"index.php",
-         "parent":1,
-         "method":"POST",
-         "request":{
-            "paste_user":"awt_user",
-            "paste_lang":"php",
-            "paste_title":"awt_title",
-            "paste_data":"function awt_fn() { }",
-            "paste_submit":"1"
+         "id": 8,
+         "name": "FUNC - Create public paste",
+         "url": "index.php",
+         "parent": 1,
+         "method": "POST",
+         "request": {
+            "paste_user": "awt_user",
+            "paste_lang": "php",
+            "paste_title": "awt_title",
+            "paste_data": "function awt_fn() { }",
+            "paste_submit": "1"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"h1",
-               "value":"awt_title",
-               "exact":false
+               "id": 1,
+               "selector": "h1",
+               "value": "awt_title",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":".codewrap",
-               "value":"font-weight: bold;&quot;>function</span>",
-               "exact":false
+               "id": 2,
+               "selector": ".codewrap",
+               "value": "font-weight: bold;&quot;>function</span>",
+               "exact": false
             },
             {
-               "id":3,
-               "selector":"",
-               "value":"Language: php",
-               "exact":false
+               "id": 3,
+               "selector": "",
+               "value": "Language: php",
+               "exact": false
             },
             {
-               "id":4,
-               "selector":"",
-               "value":"Posted by awt_user",
-               "exact":false
+               "id": 4,
+               "selector": "",
+               "value": "Posted by awt_user",
+               "exact": false
             }
          ]
       },
       {
-         "id":9,
-         "name":"FUNC - Create protected paste",
-         "url":"index.php",
-         "parent":1,
-         "method":"POST",
-         "request":{
-            "paste_lang":"php",
-            "paste_data":"function awt_fn() { }",
-            "paste_password":"awt",
-            "paste_private":"on",
-            "paste_submit":"1"
+         "id": 9,
+         "name": "FUNC - Create protected paste",
+         "url": "index.php",
+         "parent": 1,
+         "method": "POST",
+         "request": {
+            "paste_lang": "php",
+            "paste_data": "function awt_fn() { }",
+            "paste_password": "awt",
+            "paste_private": "on",
+            "paste_submit": "1"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":".alert",
-               "value":"Your paste has been saved",
-               "exact":false
+               "id": 1,
+               "selector": ".alert",
+               "value": "Your paste has been saved",
+               "exact": false
             }
          ]
       },
       {
-         "id":10,
-         "name":"FUNC - Open protected paste",
-         "url":"$parent{.alert a:nth-child(2)}{attr=href}",
-         "parent":9,
-         "method":"POST",
-         "request":{
-            "password":"awt"
+         "id": 10,
+         "name": "FUNC - Open protected paste",
+         "url": "$parent{.alert a:nth-child(2)}{attr=href}",
+         "parent": 9,
+         "method": "POST",
+         "request": {
+            "password": "awt"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"Language: php",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "Language: php",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"Share:",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "Share:",
+               "exact": false
             }
          ]
       },
       {
-         "id":11,
-         "name":"FUNC - View raw paste",
-         "url":"$parent{.btn-info:nth-child(3)}{attr=href}",
-         "parent":10,
-         "method":"GET",
-         "request":{
+         "id": 11,
+         "name": "FUNC - View raw paste",
+         "url": "$parent{.btn-info:nth-child(3)}{attr=href}",
+         "parent": 10,
+         "method": "GET",
+         "request": {
 
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"function awt_fn() { }",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "function awt_fn() { }",
+               "exact": false
             }
          ]
       },
       {
-         "id":12,
-         "name":"API - Create paste",
-         "url":"index.php",
-         "parent":1,
-         "method":"POST",
-         "request":{
-            "paste_lang":"php",
-            "paste_data":"function awt_fn() { }",
-            "api_submit":"1",
-            "mode":"xml"
+         "id": 12,
+         "name": "API - Create paste",
+         "url": "index.php",
+         "parent": 1,
+         "method": "POST",
+         "request": {
+            "paste_lang": "php",
+            "paste_data": "function awt_fn() { }",
+            "api_submit": "1",
+            "mode": "xml"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"<id>",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "<id>",
+               "exact": false
             },
             {
-               "id":2,
-               "selector":"",
-               "value":"<hash>",
-               "exact":false
+               "id": 2,
+               "selector": "",
+               "value": "<hash>",
+               "exact": false
             }
          ]
       },
       {
-         "id":13,
-         "name":"API - List pastes",
-         "url":"list.php",
-         "parent":10,
-         "method":"GET",
-         "request":{
-            "mode":"xml"
+         "id": 13,
+         "name": "API - View paste",
+         "url": "show.php",
+         "parent": 12,
+         "method": "GET",
+         "request": {
+            "id": "$parent{id}{text}",
+            "format": "xml"
          },
-         "response":[
+         "response": [
             {
-               "id":1,
-               "selector":"",
-               "value":"<paste_1>",
-               "exact":false
+               "id": 1,
+               "selector": "",
+               "value": "<id>$parent{id}{text}</id>",
+               "exact": false
+            }
+         ]
+      },
+      {
+         "id": 14,
+         "name": "API - List pastes",
+         "url": "list.php",
+         "parent": 10,
+         "method": "GET",
+         "request": {
+            "mode": "xml"
+         },
+         "response": [
+            {
+               "id": 1,
+               "selector": "",
+               "value": "<paste_1>",
+               "exact": false
             }
          ]
       }
