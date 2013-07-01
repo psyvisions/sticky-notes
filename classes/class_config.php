@@ -196,7 +196,7 @@ class config
             fwrite($fp, '$site_name = "Sticky Notes";' . "\n");
             fwrite($fp, '$site_title = "Sticky Notes pastebin";' . "\n");
             fwrite($fp, '$site_copyright = "' . htmlentities('Powered by <a href="' .
-                        'http://www.sayakbanerjee.com/sticky-notes/" rel="nofollow">' .
+                        'http://sayakb.github.io/sticky-notes/" rel="nofollow">' .
                         'Sticky Notes</a>. Copyright &copy; 2013 <a href="' .
                         'http://sayakbanerjee.com">Sayak Banerjee</a>.') . '";' . "\n");
             fwrite($fp, '$skin_name = "Bootstrap";' . "\n");
