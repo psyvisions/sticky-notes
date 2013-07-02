@@ -16,9 +16,10 @@ define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSI
 
 // Include classes
 include_once('classes/class_gsod.php');
-include_once('classes/class_config.php');
 include_once('classes/class_core.php');
+include_once('classes/class_config.php');
 include_once('classes/class_cache.php');
+include_once('classes/class_email.php');
 include_once('classes/class_db.php');
 include_once('classes/class_lang.php');
 include_once('classes/class_skin.php');
@@ -31,9 +32,10 @@ include_once('addons/geshi/geshi.php');
 $gsod = new gsod();
 
 // Instantiate general classes
-$config = new config();
 $core = new core();
+$config = new config();
 $cache = new cache();
+$email = new email();
 $db = new db();
 $lang = new lang();
 $skin = new skin();

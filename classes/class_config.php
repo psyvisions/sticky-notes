@@ -27,7 +27,7 @@ class config
     var $admin_lang_name;
     var $url_key_enabled;
     var $google_api_key;
-    
+
     var $sg_services;
     var $sg_php_key;
     var $sg_php_days;
@@ -43,15 +43,22 @@ class config
     var $ldap_filter;
     var $ldap_user_dn;
     var $ldap_password;
-    
+
+    var $smtp_host;
+    var $smtp_port;
+    var $smtp_crypt;
+    var $smtp_username;
+    var $smtp_password;
+    var $smtp_from;
+
     // Constructor
     function __construct()
     {
         global $core;
-        
+
         // Set the load flag
         $load_data = true;
-        
+
         if (strpos($_SERVER['PHP_SELF'], '/admin/') !== false)
         {
             if (file_exists(realpath('../config.php')))
@@ -74,7 +81,7 @@ class config
                 $load_data = false;
             }
         }
-        
+
         // Set the data
         if ($load_data)
         {
@@ -110,9 +117,16 @@ class config
             $this->ldap_filter     = isset($ldap_filter) ? html_entity_decode($ldap_filter) : '';
             $this->ldap_user_dn    = isset($ldap_user_dn) ? html_entity_decode($ldap_user_dn) : '';
             $this->ldap_password   = isset($ldap_password) ? html_entity_decode($ldap_password) : '';
+
+            $this->smtp_host       = isset($smtp_host) ? html_entity_decode($smtp_host) : 'localhost';
+            $this->smtp_port       = isset($smtp_port) ? $smtp_port : 25;
+            $this->smtp_crypt      = isset($smtp_crypt) ? html_entity_decode($smtp_crypt) : '';
+            $this->smtp_username   = isset($smtp_username) ? html_entity_decode($smtp_username) : '';
+            $this->smtp_password   = isset($smtp_password) ? html_entity_decode($smtp_password) : '';
+            $this->smtp_from       = isset($smtp_from) ? html_entity_decode($smtp_from) : 'admin@' . $core->hostname(false);
         }
-    }    
-    
+    }
+
     // Method to save updated config values
     function save()
     {
@@ -120,21 +134,21 @@ class config
         {
             // Using ../config.php as this function is fired only from the admin panel
             $fp = fopen(realpath('../config.php'), 'w');
-            
+
             fwrite($fp, "<?php\n");
             fwrite($fp, "// Sticky Notes Pastebin configuration file\n");
             fwrite($fp, "// (C) 2013 Sayak Banerjee. All rights reserved\n\n");
             fwrite($fp, "/// This is an auto generated file\n");
             fwrite($fp, "/// Please DO NOT modify manually\n");
             fwrite($fp, "/// Unless you are absolutely sure what you're doing ;-)\n\n");
-            
+
             fwrite($fp, '$db_host = "' . htmlentities($this->db_host) . '";' . "\n");
             fwrite($fp, '$db_port = "' . htmlentities($this->db_port) . '";' . "\n");
             fwrite($fp, '$db_name = "' . htmlentities($this->db_name) . '";' . "\n");
             fwrite($fp, '$db_username = "' . htmlentities($this->db_username) . '";' . "\n");
             fwrite($fp, '$db_password = "' . htmlentities($this->db_password) . '";' . "\n");
             fwrite($fp, '$db_prefix = "' . htmlentities($this->db_prefix) . '";' . "\n\n");
-            
+
             fwrite($fp, '$site_name = "' . htmlentities($this->site_name) . '";' . "\n");
             fwrite($fp, '$site_title = "' . htmlentities($this->site_title) . '";' . "\n");
             fwrite($fp, '$site_copyright = "' . htmlentities($this->site_copyright) . '";' . "\n");
@@ -159,11 +173,18 @@ class config
             fwrite($fp, '$ldap_uid = "' . htmlentities($this->ldap_uid) . '";' . "\n");
             fwrite($fp, '$ldap_filter = "' . htmlentities($this->ldap_filter) . '";' . "\n");
             fwrite($fp, '$ldap_user_dn = "' . htmlentities($this->ldap_user_dn) . '";' . "\n");
-            fwrite($fp, '$ldap_password = "' . htmlentities($this->ldap_password) . '";' . "\n");
+            fwrite($fp, '$ldap_password = "' . htmlentities($this->ldap_password) . '";' . "\n\n");
+
+            fwrite($fp, '$smtp_host = "' . htmlentities($this->smtp_host) . '";' . "\n");
+            fwrite($fp, '$smtp_port = ' . intval($this->smtp_port) . ';' . "\n");
+            fwrite($fp, '$smtp_crypt = "' . htmlentities($this->smtp_crypt) . '";' . "\n");
+            fwrite($fp, '$smtp_username = "' . htmlentities($this->smtp_username) . '";' . "\n");
+            fwrite($fp, '$smtp_password = "' . htmlentities($this->smtp_password) . '";' . "\n");
+            fwrite($fp, '$smtp_from = "' . htmlentities($this->smtp_from) . '";' . "\n");
 
             fwrite($fp, "?>");
             fclose($fp);
-            
+
             return true;
         }
         catch (Exception $e)
@@ -171,28 +192,30 @@ class config
             return false;
         }
     }
-    
+
     // Method to save initial data
     function create($db_host, $db_port, $db_name, $db_user, $db_pass, $db_prefix)
     {
+        global $core;
+
         try
         {
             $fp = fopen(realpath('config.php'), 'w');
-            
+
             fwrite($fp, "<?php\n");
             fwrite($fp, "// Sticky Notes Pastebin configuration file\n");
             fwrite($fp, "// (C) 2013 Sayak Banerjee. All rights reserved\n\n");
             fwrite($fp, "/// This is an auto generated file\n");
             fwrite($fp, "/// Please DO NOT modify manually\n");
             fwrite($fp, "/// Unless you are absolutely sure what you're doing ;)\n\n");
-            
+
             fwrite($fp, '$db_host = "' . $db_host . '";' . "\n");
             fwrite($fp, '$db_port = "' . $db_port . '";' . "\n");
             fwrite($fp, '$db_name = "' . $db_name . '";' . "\n");
             fwrite($fp, '$db_username = "' . $db_user . '";' . "\n");
             fwrite($fp, '$db_password = "' . $db_pass . '";' . "\n");
             fwrite($fp, '$db_prefix = "' . $db_prefix . '";' . "\n\n");
-            
+
             fwrite($fp, '$site_name = "Sticky Notes";' . "\n");
             fwrite($fp, '$site_title = "Sticky Notes pastebin";' . "\n");
             fwrite($fp, '$site_copyright = "' . htmlentities('Powered by <a href="' .
@@ -220,11 +243,18 @@ class config
             fwrite($fp, '$ldap_uid = "";' . "\n");
             fwrite($fp, '$ldap_filter = "";' . "\n");
             fwrite($fp, '$ldap_user_dn = "";' . "\n");
-            fwrite($fp, '$ldap_password = "";' . "\n");
+            fwrite($fp, '$ldap_password = "";' . "\n\n");
+
+            fwrite($fp, '$smtp_host = "localhost";' . "\n");
+            fwrite($fp, '$smtp_port = 25;' . "\n");
+            fwrite($fp, '$smtp_crypt = "";' . "\n");
+            fwrite($fp, '$smtp_username = "";' . "\n");
+            fwrite($fp, '$smtp_password = "";' . "\n");
+            fwrite($fp, '$smtp_from = "' . 'admin@' . $core->hostname(false) . '";' . "\n");
 
             fwrite($fp, "?>");
             fclose($fp);
-            
+
             return true;
         }
         catch (Exception $e)

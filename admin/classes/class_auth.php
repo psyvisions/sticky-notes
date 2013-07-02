@@ -28,7 +28,7 @@ class auth
                 "WHERE lastlogin < {$this->max_age} AND lastlogin > 0";
         $db->query($sql);
     }
-    
+
     // Method for authenticating a user
     function login($username, $password)
     {
@@ -79,7 +79,7 @@ class auth
             $hash = sha1($password . $row['salt']);
 
             if ($row['password'] == $hash)
-            { 
+            {
                 // Update the session ID and details for the user
                 $sql = "UPDATE {$db->prefix}users SET sid = '{$this->sid}' " .
                        "WHERE username = '{$username}' AND password <> ''";
@@ -95,7 +95,7 @@ class auth
                 return false;
             }
         }
-        
+
         // User was not found in the DB
         else
         {
@@ -200,6 +200,41 @@ class auth
         @ldap_close($ldap);
 
         // Username was not found
+        return false;
+    }
+
+    // Reset user password
+    function reset($username)
+    {
+        global $db;
+
+        // Get the user details
+        $sql = "SELECT * FROM {$db->prefix}users " .
+               "WHERE username = '{$username}' " .
+               "AND password <> ''";
+        $row = $db->query($sql, true);
+
+        // Check if the user exists
+        if ($row != null)
+        {
+            // Generate and update a new password
+            $newpass = substr(sha1(time()), rand(0, 31), 8);
+            $hash = sha1($newpass . $row['salt']);
+
+            $sql = "UPDATE {$db->prefix}users " .
+                   "SET password = '{$hash}' " .
+                   "WHERE id = {$row['id']}";
+            $db->query($sql);
+
+            // Return the new password
+            return array(
+                'user'  => $row['dispname'] ? $row['dispname'] : $row['username'],
+                'email' => $row['email'],
+                'pass'  => $newpass,
+            );
+        }
+
+        // No user found
         return false;
     }
 

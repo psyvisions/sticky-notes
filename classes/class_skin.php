@@ -24,7 +24,7 @@ class skin
     function __construct()
     {
         global $core, $config;
-        
+
         $this->admin_skin_name = strtolower($config->admin_skin_name);
         $this->admin_skin_path = $core->path() . 'skins/' . strtolower($config->admin_skin_name);
         $this->skin_name = strtolower($config->skin_name);
@@ -72,11 +72,11 @@ class skin
     function parse($file_name)
     {
         global $lang, $gsod, $cache;
-        
+
         // Try to get template data from cache
         $cache_key = json_encode($this->skin_vars) . $file_name;
         $data = $cache->get($cache_key);
-        
+
         // Data not in cache, parse the template file
         if ($data === false)
         {
@@ -88,7 +88,7 @@ class skin
                 $message .= 'Verify that the skin selected is present in the skins/ folder';
                 $gsod->trigger($message);
             }
-            
+
             $data = file_get_contents($file_name);
             $data = $this->set_defaults($data);
 
@@ -99,10 +99,10 @@ class skin
 
             // Remove unknown placeholders
             $data = preg_replace('/\[\[(.*?)\]\]/', '', $data);
-            
+
             // Apply localization data
             $data = $lang->parse($data);
-            
+
             // Add the data to cache
             $cache->set($cache_key, $data);
         }
@@ -152,7 +152,7 @@ class skin
             $id = $core->variable('id', '');
             $key = $core->variable('key', '');
             $show = empty($key) ? $id : $key;
-            
+
             $header_tagline .= '/' . $show;
         }
         else if (strpos($core->script_name(), 'list.php') !== false)
@@ -180,7 +180,7 @@ class skin
     function locate($file, $admin_skin = false)
     {
         global $core;
-        
+
         if (strpos($file, '.html') === false &&
             strpos($file, '.xml') === false &&
             strpos($file, '.json') === false)
@@ -199,7 +199,7 @@ class skin
         else if ($admin_skin)
         {
             return realpath('skins/' . $this->admin_skin_name . '/html/' . $file);
-        }        
+        }
         else
         {
             return realpath('skins/' . $this->skin_name . '/html/' . $file);
@@ -236,7 +236,7 @@ class skin
             echo $this->parse($file_header);
             echo $this->parse($file_body);
             echo $this->parse($file_footer);
-        }        
+        }
         else
         {
             $file_header = $this->locate('tpl_header');
@@ -332,7 +332,7 @@ class skin
                 {
                     $entry = substr($entry, 0, strrpos($entry, '.'));
                 }
-                
+
                 if ($pascal_case)
                 {
                     $entries[] = strtoupper(substr($entry, 0, 1)) . substr($entry, 1, strlen($entry) - 1);
@@ -365,7 +365,7 @@ class skin
         $this->output();
         exit;
     }
-    
+
     // Function to exclude a string from being treated as a key
     function escape(&$data)
     {
@@ -381,6 +381,17 @@ class skin
         }
 
         return $condition ? 'checked="checked"' : '';
+    }
+
+    // Return selected state of an option based on a condition
+    function selected($condition, $invert = false)
+    {
+        if ($invert)
+        {
+            $condition = !$condition;
+        }
+
+        return $condition ? 'selected="selected"' : '';
     }
 
     // Return disabled status of control based on a condition

@@ -36,13 +36,13 @@ if ($config_save)
     {
         $module->notify($lang->get('config_reqd'));
     }
-    
+
     // Check if the file is writable
     else if (!is_writable(realpath('../config.php')))
     {
         $module->notify($lang->get('config_cantwrite'));
     }
-    
+
     // Write the conf data
     else
     {
@@ -56,14 +56,14 @@ if ($config_save)
         $config->admin_lang_name = $config_admin_lang;
         $config->url_key_enabled = $config_url_key != 0;
         $config->google_api_key  = $config_google_api_key;
-        
+
         $config->sg_services     = implode(',', $config_sg_svcs);
         $config->sg_php_key      = $config_php_key;
         $config->sg_php_days     = $config_php_days;
         $config->sg_php_score    = $config_php_score;
         $config->sg_php_type     = $config_php_type;
         $config->sg_censor       = $config_censor;
-        
+
         $config->save();
         $module->notify($lang->get('changes_saved'));
     }
@@ -86,24 +86,24 @@ $sg_svcs = '';
 
 foreach ($available_svcs as $svc)
 {
-    $selected =  (in_array($svc, $config_sg_svcs));    
+    $selected =  (in_array($svc, $config_sg_svcs));
     $sg_svcs .= '<option' . ($selected ? ' selected="selected"' : '') . '>' .
                 $svc . '</option>';
 }
 
 // Assign skin data
 $skin->assign(array(
-    'config_name'           => $config_name,
-    'config_title'          => $config_title,
-    'config_copyright'      => $config_copyright,
-    'config_php_key'        => $config_php_key,
-    'config_php_days'       => $config_php_days,
-    'config_php_score'      => $config_php_score,
-    'config_php_type'       => $config_php_type,
-    'config_censor'         => $config_censor,
+    'config_name'           => htmlspecialchars($config_name),
+    'config_title'          => htmlspecialchars($config_title),
+    'config_copyright'      => htmlspecialchars($config_copyright),
+    'config_php_key'        => htmlspecialchars($config_php_key),
+    'config_php_days'       => htmlspecialchars($config_php_days),
+    'config_php_score'      => htmlspecialchars($config_php_score),
+    'config_php_type'       => htmlspecialchars($config_php_type),
+    'config_censor'         => htmlspecialchars($config_censor),
+    'config_google_api_key' => htmlspecialchars($config_google_api_key),
     'config_url_key_yes'    => $skin->checked($config_url_key == 1),
     'config_url_key_no'     => $skin->checked($config_url_key == 0),
-    'config_google_api_key' => $config_google_api_key,
     'skin_list'             => $skin_list,
     'lang_list'             => $lang_list,
     'admin_skin_list'       => $admin_skin_list,
@@ -116,4 +116,4 @@ $module_title = $lang->get('site_config');
 $module_data  = $skin->output('tpl_config_main', true, true);
 
 ?>
- 
+

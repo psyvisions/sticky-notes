@@ -28,12 +28,12 @@ else
 {
     $db->escape($username);
     $db->escape($sid);
-    
+
     // Validate session ID
     $sql = "SELECT sid FROM {$db->prefix}users " .
            "WHERE username = '{$username}' AND sid = '{$sid}'";
     $row = $db->query($sql, true);
-    
+
     if ($row != null)
     {
         $core->set_cookie('session_id_admin', $sid);
@@ -66,26 +66,28 @@ $skin->assign(array(
     'welcome_text'      => $welcome_text,
     'module_title'      => $module_title,
     'module_data'       => $module_data,
-    
+
     'home_url'          => $core->root_path(),
     'dashboard_url'     => $core->path(),
     'pastes_url'        => $core->path() . '?mode=pastes',
     'users_url'         => $core->path() . '?mode=users',
     'ipbans_url'        => $core->path() . '?mode=ipbans',
+    'email_url'         => $core->path() . '?mode=email',
     'auth_url'          => $core->path() . '?mode=auth',
     'config_url'        => $core->path() . '?mode=config',
     'logout_url'        => $core->path() . '?mode=logout',
-    
+
     'dashboard_class'   => ($mode == "dashboard" ? 'nav_selected' : 'nav_unselected'),
     'pastes_class'      => ($mode == "pastes" ? 'nav_selected' : 'nav_unselected'),
     'users_class'       => ($mode == "users" ? 'nav_selected' : 'nav_unselected'),
     'ipbans_class'      => ($mode == "ipbans" ? 'nav_selected' : 'nav_unselected'),
+    'email_class'       => ($mode == "email" ? 'nav_selected' : 'nav_unselected'),
     'auth_class'        => ($mode == "auth" ? 'nav_selected' : 'nav_unselected'),
     'config_class'      => ($mode == "config" ? 'nav_selected' : 'nav_unselected'),
-)); 
+));
 
 // Output the page
-$skin->title($module_title . ' &bull; ' . $lang->get('site_title'));   
+$skin->title($module_title . ' &bull; ' . $lang->get('site_title'));
 echo $skin->output(false, false, true);
 
 ?>

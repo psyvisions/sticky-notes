@@ -29,16 +29,16 @@ if ($auth_save)
     {
         $module->notify($lang->get('auth_reqd'));
     }
-    
+
     // Check if the file is writable
     else if (!is_writable(realpath('../config.php')))
     {
         $module->notify($lang->get('config_cantwrite'));
     }
-    
+
     // Write the conf data
     else
-    {   
+    {
         // Update configuration data to new values
         $config->auth_method   = $auth_method;
         $config->ldap_server   = $ldap_server;
@@ -48,7 +48,7 @@ if ($auth_save)
         $config->ldap_filter   = $ldap_filter;
         $config->ldap_user_dn  = $ldap_user_dn;
         $config->ldap_password = $ldap_password;
-        
+
         $config->save();
         $module->notify($lang->get('changes_saved'));
     }
@@ -56,15 +56,15 @@ if ($auth_save)
 
 // Assign skin data
 $skin->assign(array(
-    'db_selected'     => $auth_method == 'db' ? 'selected="selected"' : '',
-    'ldap_selected'   => $auth_method == 'ldap' ? 'selected="selected"' : '',
-    'ldap_server'     => $ldap_server,
-    'ldap_port'       => $ldap_port,
-    'ldap_base_dn'    => $ldap_base_dn,
-    'ldap_uid'        => $ldap_uid,
-    'ldap_filter'     => $ldap_filter,
-    'ldap_user_dn'    => $ldap_user_dn,
-    'ldap_password'   => $ldap_password,
+    'db_selected'     => $skin->selected($auth_method == 'db'),
+    'ldap_selected'   => $skin->selected($auth_method == 'ldap'),
+    'ldap_server'     => htmlspecialchars($ldap_server),
+    'ldap_port'       => htmlspecialchars($ldap_port),
+    'ldap_base_dn'    => htmlspecialchars($ldap_base_dn),
+    'ldap_uid'        => htmlspecialchars($ldap_uid),
+    'ldap_filter'     => htmlspecialchars($ldap_filter),
+    'ldap_user_dn'    => htmlspecialchars($ldap_user_dn),
+    'ldap_password'   => htmlspecialchars($ldap_password),
 ));
 
 // Set the page title
@@ -72,4 +72,4 @@ $module_title = $lang->get('authentication');
 $module_data =  $skin->output('tpl_config_auth', true, true);
 
 ?>
- 
+

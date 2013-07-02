@@ -13,14 +13,15 @@ class core
     // Global vars
     var $build;
     var $build_num;
+    var $base_path;
 
     // Constructor
     function __construct()
     {
         // Define globals
         global $gsod;
-        
-        // Get the version number       
+
+        // Get the version number
         if (file_exists('VERSION'))
         {
             $data = file_get_contents('VERSION');
@@ -34,10 +35,11 @@ class core
             $gsod->trigger('<b>Sticky Notes fatal error</b><br /><br />' .
                            'Version file not found');
         }
-        
+
         $data = explode("\n", $data);
         $this->build = $data[0];
         $this->build_num = $data[1];
+        $this->base_path = $this->in_admin() ? '../' : '';
     }
 
     // Function to return current path
@@ -49,12 +51,12 @@ class core
 
         return $path;
     }
-    
+
     // Function to return root path
     function root_path()
     {
         $path = $this->path();
-        
+
         if (strpos($path, 'admin') !== false)
         {
             return substr($path, 0, strrpos($path, 'admin'));
@@ -81,7 +83,7 @@ class core
 
     // Function to set a cookie
     function set_cookie($name, $value, $expire = 0)
-    {      
+    {
         if ($expire > 0)
         {
             $expire = time() + ($expire * 24 * 60 * 60);
@@ -89,7 +91,7 @@ class core
 
         setcookie('stickynotes_' . $name, $value, $expire, $this->root_path());
     }
-    
+
     // Function to expire a cookie
     function unset_cookie($name)
     {
@@ -142,12 +144,10 @@ class core
     {
         return $_SERVER['REQUEST_URI'];
     }
-    
-    // Returns the server's hostname
-    function hostname()
-    {
-        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
 
+    // Returns the server's hostname
+    function hostname($add_protocol = true)
+    {
         if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
         {
             $hostname = $_SERVER['HTTP_X_FORWARDED_HOST'];
@@ -160,22 +160,30 @@ class core
         {
             $hostname = "unknown_host";
         }
-        
-        return $protocol . '://' . $hostname;
+
+        if ($add_protocol)
+        {
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+            return $protocol . '://' . $hostname;
+        }
+        else
+        {
+            return $hostname;
+        }
     }
 
-    // Get the base URI
+    // Get the base URI (this is NOT the script base path)
     function base_uri()
     {
         return $this->hostname() . $this->path();
     }
-    
+
     // Get the full URI
     function full_uri()
     {
         return $this->hostname() . $this->request_uri();
     }
-    
+
     // Method to replace square brackets with normal braces
     function rss_encode(&$data)
     {
@@ -185,16 +193,16 @@ class core
         $data = str_replace('}', ')', $data);
         $data = str_replace(chr(0), '', $data);
     }
-    
+
     // Method to redirect to a specified URL
     function redirect($url)
     {
         header("Location: {$url}");
         exit;
     }
- 
+
     // Method to return the server load
-    function server_load() 
+    function server_load()
     {
         $os = strtolower(PHP_OS);
 

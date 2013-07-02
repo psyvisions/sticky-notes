@@ -21,6 +21,7 @@ $paste_delete = isset($_POST['paste_delete']);
 $spacer_visibility = 'visible';
 $detail_visibility = 'collapsed';
 $script_notification = '';
+$sql_where = '';
 
 if (!$paste_search)
 {
@@ -30,48 +31,60 @@ if (!$paste_search)
 // Escape the paste id
 $db->escape($paste_id);
 
+// Get the sql where claud based on the type of paste id
+if (!empty($paste_id))
+{
+    if ($config->url_key_enabled && strtolower(substr($paste_id, 0, 1)) == 'p')
+    {
+        $paste_id = substr($paste_id, 1);
+        $sql_where = "WHERE urlkey = '{$paste_id}'";
+    }
+    else if (is_numeric($paste_id))
+    {
+        $paste_id = intval($paste_id);
+        $sql_where = "WHERE id = {$paste_id}";
+    }
+}
+
 // Make public
 if ($paste_makepub)
-{  
-    $sql = "UPDATE {$db->prefix}main SET private=0, password='' " .
-           "WHERE id = {$paste_id}";
+{
+    $sql = "UPDATE {$db->prefix}main SET private=0, password='' " . $sql_where;
     $db->query($sql);
-    
+
     $module->notify($lang->get('made_public'));
-    
+
     $skin->assign(array(
         'rempass_visibility'    => 'collapsed',
         'makepub_visibility'    => 'collapsed',
-    ));    
+    ));
 }
 
 // Remove password
 if ($paste_rempass)
-{   
-    $sql = "UPDATE {$db->prefix}main SET password='' " .
-           "WHERE id = {$paste_id}";
+{
+    $sql = "UPDATE {$db->prefix}main SET password='' " . $sql_where;
     $db->query($sql);
-    
+
     $module->notify($lang->get('pass_removed'));
-   
+
     $skin->assign(array(
         'rempass_visibility'    => 'collapsed',
-    ));    
+    ));
 }
 
 // Search form submitted
 if ($paste_search || $paste_rempass || $paste_makepub)
 {
     $paste_id = trim($paste_id);
-    $sql = "SELECT * FROM {$db->prefix}main " .
-           "WHERE id = {$paste_id}";
+    $sql = "SELECT * FROM {$db->prefix}main " . $sql_where;
     $row = $db->query($sql, true);
-    
+
     if ($row != null)
     {
         $spacer_visibility = 'collapsed';
         $detail_visibility = 'visible';
-        
+
         $skin->assign(array(
             'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
             'paste_time'            => date('d M Y, h:i:s e', $row['timestamp']),
@@ -84,26 +97,25 @@ if ($paste_search || $paste_rempass || $paste_makepub)
             'makepub_visibility'    => ($row['private'] == 1 ? 'visible' : 'collapsed'),
         ));
     }
-    else if ($paste_id > 0)
+    else if ($paste_id)
     {
         $module->notify($lang->get('paste_id_404'));
-    }    
+    }
 }
 
 // Delete paste
 if ($paste_delete)
 {
-    $sql = "DELETE FROM {$db->prefix}main " .
-           "WHERE id = {$paste_id}";
+    $sql = "DELETE FROM {$db->prefix}main " . $sql_where;
     $db->query($sql);
-            
+
     $paste_id = 0;
     $module->notify($lang->get('paste_deleted'));
 }
 
 // Set the module variables
 $skin->assign(array(
-    'spacer_visibility'         => $spacer_visibility,   
+    'spacer_visibility'         => $spacer_visibility,
     'detail_visibility'         => $detail_visibility,
     'paste_id'                  => ($paste_id > 0 ? $paste_id : ''),
 ));

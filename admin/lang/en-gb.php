@@ -13,6 +13,7 @@ $lang_data = array(
     'manage_pastes'         => 'Manage Pastes',
     'manage_users'          => 'Manage Users',
     'manage_ip_bans'        => 'Manage IP Bans',
+    'email_config'          => 'Email configuration',
     'authentication'        => 'Authentication',
     'site_config'           => 'Site Configuration',
     'dashboard'             => 'Dashboard',
@@ -108,6 +109,19 @@ $lang_data = array(
     'censored_phrases'      => 'Censored phrases',
     'censored_phrases_exp'  => 'Pastes containing these phrases will be dropped (case <b>insensitive</b>).<br />' .
                                'Enter each phrase in a new line',
+
+    'smtp_options'              => 'SMTP options',
+    'smtp_reqd'                 => 'Server, port and sender are mandatory fields',
+    'smtp_host'                 => 'Server hostname',
+    'smtp_port'                 => 'Port number',
+    'smtp_username'             => 'Server username',
+    'smtp_password'             => 'Server password',
+    'smtp_from'                 => 'Mail sender',
+    'smtp_crypt'                => 'Encryption',
+    'none'                      => 'None',
+    'ssl'                       => 'SSL',
+    'tls'                       => 'TLS',
+
     'admin_auth_settings'   => 'Admin authentication settings',
     'auth_method'           => 'Auth method',
     'database'              => 'Database',
@@ -135,7 +149,7 @@ $lang_data = array(
                                'user. Required for Active Directory Servers.<br />' .
                                '<b>Warning:</b> This password will be stored as plain text in the config file, ' .
                                'visible to everybody who can access your configuration file.',
-    
+
     'username_required'         => 'Please enter the username',
     'email_required'            => 'Please enter e-mail address',
     'username_invalid'          => 'Username can contain only alphabets, numbers and dots (.)',
@@ -154,10 +168,10 @@ $lang_data = array(
     'url_key'                   => 'Enable URL key',
     'url_key_exp'               => 'This feature will create alphanumeric paste URL identifiers. Previously created ' .
                                    'numeric identifiers will still work.',
-                                   
-    'url_short_config'       => 'URL shortener configuration',
-    'google_api_key'         => 'Google API Key',
-    'google_api_key_exp'     => 'You can generate an API key at the <a href="https://code.google.com/apis/console">' .
+
+    'url_short_config'      => 'URL shortener configuration',
+    'google_api_key'        => 'Google API Key',
+    'google_api_key_exp'    => 'You can generate an API key at the <a href="https://code.google.com/apis/console">' .
                                'Google API Console</a>',
 
     /* Page: login.php */
@@ -165,8 +179,17 @@ $lang_data = array(
     'username'          => 'Username',
     'password'          => 'Password',
     'login'             => 'Login',
+    'reset'             => 'Reset',
     'invalid_login'     => 'Login failed for user __user__', // Do not change __user__
     'logged_out'        => 'You have logged out successfully.',
+    'forgot_password'   => 'Forgot password?',
+    'back_login'        => '&laquo; Back to login',
+    'reset_exp'         => 'Upon clicking reset, your account password will be reset and mailed to your registered ' .
+                           'email address.',
+    'pass_reset'        => '[Sticky Notes] Your password has been reset',
+    'email_sent'        => 'New password has been sent to your email address',
+    'reset_ldap'        => 'Cannot reset password with LDAP authentication enabled',
+    'reset_404'         => 'Invalid username entered',
 
     /* Global */
     'back_to_home'      => '&larr; Back to __sitename__', // Do not change __sitename__
