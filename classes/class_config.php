@@ -11,6 +11,7 @@
 class config
 {
     // Declare config variables
+    var $db_type;
     var $db_host;
     var $db_port;
     var $db_name;
@@ -85,6 +86,7 @@ class config
         // Set the data
         if ($load_data)
         {
+            $this->db_type         = isset($db_type) ? html_entity_decode($db_type) : 'mysql';
             $this->db_host         = isset($db_host) ? html_entity_decode($db_host) : '';
             $this->db_port         = isset($db_port) ? html_entity_decode($db_port) : '';
             $this->db_name         = isset($db_name) ? html_entity_decode($db_name) : '';
@@ -142,6 +144,7 @@ class config
             fwrite($fp, "/// Please DO NOT modify manually\n");
             fwrite($fp, "/// Unless you are absolutely sure what you're doing ;-)\n\n");
 
+            fwrite($fp, '$db_type = "' . htmlentities($this->db_type) . '";' . "\n");
             fwrite($fp, '$db_host = "' . htmlentities($this->db_host) . '";' . "\n");
             fwrite($fp, '$db_port = "' . htmlentities($this->db_port) . '";' . "\n");
             fwrite($fp, '$db_name = "' . htmlentities($this->db_name) . '";' . "\n");
@@ -194,7 +197,7 @@ class config
     }
 
     // Method to save initial data
-    function create($db_host, $db_port, $db_name, $db_user, $db_pass, $db_prefix)
+    function create($db_type, $db_host, $db_port, $db_name, $db_user, $db_pass, $db_prefix)
     {
         global $core;
 
@@ -209,6 +212,7 @@ class config
             fwrite($fp, "/// Please DO NOT modify manually\n");
             fwrite($fp, "/// Unless you are absolutely sure what you're doing ;)\n\n");
 
+            fwrite($fp, '$db_type = "' . $db_type . '";' . "\n");
             fwrite($fp, '$db_host = "' . $db_host . '";' . "\n");
             fwrite($fp, '$db_port = "' . $db_port . '";' . "\n");
             fwrite($fp, '$db_name = "' . $db_name . '";' . "\n");

@@ -47,20 +47,19 @@ else
     exit("ERROR");
 }
 
-// Escape the paste id
-$db->escape($paste_id);
-
 // Build the query based on whether a key or ID was used
 if ($is_key)
 {
-    $sql = "SELECT * FROM {$db->prefix}main WHERE urlkey = '{$paste_id}' LIMIT 1";
+    $sql = "SELECT * FROM {$db->prefix}main WHERE urlkey = :id LIMIT 1";
 }
 else
 {
-    $sql = "SELECT * FROM {$db->prefix}main WHERE id = {$paste_id} LIMIT 1";
+    $sql = "SELECT * FROM {$db->prefix}main WHERE id = :id LIMIT 1";
 }
 
-$row = $db->query($sql, true);
+$row = $db->query($sql, array(
+    ':id' => $paste_id
+), true);
 
 // If we queried using an ID, we show the paste only if there is no corresponding
 // key in the DB. We skip this check if keys are disabled

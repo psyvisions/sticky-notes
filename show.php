@@ -72,21 +72,13 @@ else
 // Set up session for the paste
 $sid = $core->variable('session_id_' . $paste_id, '', true);
 
-// Escape the paste id
-$db->escape($paste_id);
-
-// Build the query based on whether a key or ID was used
-if ($is_key)
-{
-    $sql_where = "urlkey = '{$paste_id}'";
-}
-else
-{
-    $sql_where = "id = {$paste_id}";
-}
+// Build the WHERE claus condition
+$sql_col = $is_key ? 'urlkey' : 'id';
+$sql_where = "{$sql_col} = :id";
+$params = array(':id' => $paste_id);
 
 $sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where} LIMIT 1";
-$row = $db->query($sql, true);
+$row = $db->query($sql, $params, true);
 
 // If we queried using an ID, we show the paste only if there is no corresponding
 // key in the DB. We skip this check if keys are disabled
@@ -152,19 +144,12 @@ if ($row['private'] == "1")
 // Check if password cookie is there
 if (!empty($row['password']) && !empty($sid))
 {
-    // Escape the session id
-    $db->escape($sid);
-    
-    // Clean up the session data every 30 seconds
-    if (time() % 30 == 0)
-    {
-        $age = time() - 1200;
-        $db->query("DELETE FROM {$db->prefix}session " .
-                   "WHERE timestamp < {$age}");
-    }
+    $sql = "SELECT sid FROM {$db->prefix}session " .
+           "WHERE sid = :sid";
 
-    $pass_data = $db->query("SELECT sid FROM {$db->prefix}session " .
-                            "WHERE sid = '{$sid}'", true);
+    $pass_data = $db->query($sql, array(
+        ':sid' => $sid
+    ), true);
 
     if (!empty($pass_data['sid']))
     {
@@ -227,9 +212,15 @@ if (!empty($row['password']) && !empty($password) && !$exempt)
         // Create a session
         $sid = sha1(time() . $core->remote_ip());
 
+        $sql = "INSERT INTO {$db->prefix}session " .
+               "(sid, timestamp) VALUES (:sid, :timestamp)";
+
+        $db->query($sql, array(
+            ':sid'          => $sid,
+            ':timestamp'    => time()
+        ));
+
         $core->set_cookie('session_id_' . $paste_id, $sid);
-        $db->query("INSERT INTO {$db->prefix}session " .
-                   "(sid, timestamp) VALUES ('{$sid}', " . time() . ")");
     }
 }
 
@@ -242,9 +233,9 @@ $hit_time = $cache->get($hit_key);
 if ($hit_time === false)
 {
     $sql = "UPDATE {$db->prefix}main SET hits = hits + 1 WHERE {$sql_where}";
-    $db->query($sql);
+    $db->query($sql, $params);
 
-    if ($db->affected_rows() == 1)
+    if ($db->affected_rows == 1)
     {
         $cache->set($hit_key, time());
     }
@@ -255,7 +246,7 @@ if ($mode == 'raw')
 {
     header('Content-type: text/plain; charset=UTF-8');
     header('Content-Disposition: inline; filename="pastedata"');
-    
+
     echo $row['data'];
     exit;
 }
@@ -317,7 +308,7 @@ $core->set_cookie('short_get', $lang->get('short_get'), 365);
 $core->set_cookie('short_generating', $lang->get('short_generating'), 365);
 $core->set_cookie('short_error', $lang->get('short_error'), 365);
 
-// Format the paste title   
+// Format the paste title
 if (!empty($row['title']))
 {
     $title = htmlspecialchars($row['title']);

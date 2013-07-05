@@ -25,8 +25,11 @@ class auth
 
         // Expire old sessions
         $sql = "UPDATE {$db->prefix}users SET sid = '', lastlogin = 0 " .
-                "WHERE lastlogin < {$this->max_age} AND lastlogin > 0";
-        $db->query($sql);
+               "WHERE lastlogin < :max_age AND lastlogin > 0";
+
+        $db->query($sql, array(
+            ':max_age' => $this->max_age
+        ));
     }
 
     // Method for authenticating a user
@@ -42,9 +45,6 @@ class auth
         {
             // Create a new session
             $this->create_session();
-
-            // Escape the username
-            $db->escape($username);
 
             // Generate the delegate and execute the method
             $delegate = '$auth_status = $this->authenticate_' . $method .
@@ -69,9 +69,12 @@ class auth
 
         // Get the user details
         $sql = "SELECT * FROM {$db->prefix}users " .
-               "WHERE username = '{$username}' " .
+               "WHERE username = :username " .
                "AND password <> ''";
-        $row = $db->query($sql, true);
+
+        $row = $db->query($sql, array(
+            ':username' => $username
+        ), true);
 
         // Check if the user exists
         if ($row != null)
@@ -81,9 +84,13 @@ class auth
             if ($row['password'] == $hash)
             {
                 // Update the session ID and details for the user
-                $sql = "UPDATE {$db->prefix}users SET sid = '{$this->sid}' " .
-                       "WHERE username = '{$username}' AND password <> ''";
-                $db->query($sql);
+                $sql = "UPDATE {$db->prefix}users SET sid = :sid " .
+                       "WHERE username = :username AND password <> ''";
+
+                $db->query($sql, array(
+                    ':username' => $username,
+                    ':sid'      => $this->sid
+                ));
 
                 // Authentication was successful
                 return true;
@@ -164,24 +171,35 @@ class auth
                 // Check if user is already present. We check for a blank password here indicating
                 // that we are looking for an LDAP user. DB users will not have blank passwords
                 $sql = "SELECT * FROM {$db->prefix}users " .
-                       "WHERE username = '{$username}' AND password = ''";
-                $row = $db->query($sql, true);
+                       "WHERE username = :username AND password = ''";
+
+                $row = $db->query($sql, array(
+                    ':username' => $username
+                ), true);
 
                 // If user is not found, insert one!
                 if ($row == null)
                 {
                     $sql = "INSERT INTO {$db->prefix}users " .
                            "(username, password, salt, email, dispname, sid, lastlogin) " .
-                           "VALUES ('{$username}', '', '', '', '', '{$this->sid}', 0)";
-                    $db->query($sql);
+                           "VALUES (:username, '', '', '', '', :sid, 0)";
+
+                    $db->query($sql, array(
+                        ':username' => $username,
+                        ':sid'      => $this->sid
+                    ));
                 }
 
                 // User was found, just update the session ID
                 else
                 {
-                    $sql = "UPDATE {$db->prefix}users SET sid = '{$this->sid}' " .
-                           "WHERE username = '{$username}' AND password = ''";
-                    $db->query($sql);
+                    $sql = "UPDATE {$db->prefix}users SET sid = :sid " .
+                           "WHERE username = :username AND password = ''";
+
+                    $db->query($sql, array(
+                        ':username' => $username,
+                        ':sid'      => $this->sid
+                    ));
                 }
 
                 // Authentication was successful
@@ -210,9 +228,12 @@ class auth
 
         // Get the user details
         $sql = "SELECT * FROM {$db->prefix}users " .
-               "WHERE username = '{$username}' " .
+               "WHERE username = :username " .
                "AND password <> ''";
-        $row = $db->query($sql, true);
+
+        $row = $db->query($sql, array(
+            ':username' => $username
+        ), true);
 
         // Check if the user exists
         if ($row != null)
@@ -222,9 +243,13 @@ class auth
             $hash = sha1($newpass . $row['salt']);
 
             $sql = "UPDATE {$db->prefix}users " .
-                   "SET password = '{$hash}' " .
-                   "WHERE id = {$row['id']}";
-            $db->query($sql);
+                   "SET password = :hash " .
+                   "WHERE id = :id";
+
+            $db->query($sql, array(
+                ':hash' => $hash,
+                ':id'   => $row['id']
+            ));
 
             // Return the new password
             return array(

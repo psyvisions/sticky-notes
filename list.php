@@ -60,13 +60,17 @@ else
     $lim_start = ($page * 10) - 10;
 }
 
-// Escape the project
-$db->escape($project);
-
 // Build the WHERE and ORDER BY claus
-$sql_where = 'private = 0' . (!empty($project) ? " AND project = '{$project}'" : '');
+$sql_where = 'private = 0';
 $sql_order = 'timestamp DESC';
 $sql_limit = "{$lim_start}, 10";
+$params = array();
+
+if (!empty($project))
+{
+    $params[':project'] = $project;
+    $sql_where .= ' AND project = :project';
+}
 
 if ($trending)
 {
@@ -91,7 +95,8 @@ if ($trending)
 
     if ($trend_time > 0)
     {
-        $sql_where .= " AND timestamp >= " . (time() - $trend_time);
+        $params[':timestamp'] = time() - $trend_time;
+        $sql_where .= ' AND timestamp >= :timestamp';
         $sql_order = 'hits DESC';
         $sql_limit = '10';
     }
@@ -101,7 +106,7 @@ if ($trending)
 if (!$trending)
 {
     $sql = "SELECT COUNT(id) AS total FROM {$db->prefix}main WHERE {$sql_where}";
-    $row = $db->query($sql);
+    $row = $db->query($sql, $params);
     $total = $row[0]['total'];
 }
 else
@@ -114,7 +119,7 @@ $pagination = $skin->pagination($total, $page);
 // Get the list
 $sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where} " .
        "ORDER BY {$sql_order} LIMIT {$sql_limit}";
-$rows = $db->query($sql);
+$rows = $db->query($sql, $params);
 $rowcount = count($rows);
 
 // Populate list items
@@ -136,7 +141,7 @@ foreach ($rows as $row)
         }
 
         $row['data'] = substr($row['data'], 0, strlen($row['data']) - 2);
-    }    
+    }
 
     // Syntax highlighting - only for web interface
     if (!$rss)
@@ -183,11 +188,11 @@ foreach ($rows as $row)
     if ($count == 1)
     {
         $published = $time;
-    }    
+    }
 
-    // Before we display, we need to escape the data from the skin/lang parsers    
+    // Before we display, we need to escape the data from the skin/lang parsers
     if ($rss)
-    {        
+    {
         $core->rss_encode($code_data);
     }
     else
@@ -205,8 +210,8 @@ foreach ($rows as $row)
     {
         $key = $row['id'];
     }
-    
-    // Format the paste title   
+
+    // Format the paste title
     if (!empty($row['title']))
     {
         $title = htmlspecialchars($row['title']);

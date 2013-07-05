@@ -9,6 +9,8 @@
 */
 
 // Fill in the database details
+$db_type = ""; // Required field. Supported types: mysql, pgsql, mssql, sybase and sqlite
+
 $db_host = ""; // Required field
 
 $db_port = ""; // Optional field. Leave blank if not known

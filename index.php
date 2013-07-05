@@ -23,7 +23,7 @@ $project = $core->variable('project', '');
 $mode = $core->variable('mode', '');
 $time = time();
 $skip_insert = false;
-$new_id = 0;
+$db->insert_id = 0;
 
 if (empty($project))
 {
@@ -113,19 +113,7 @@ if ($paste_submit || $api_submit)
 
 if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
 {
-    // Capture the IP address
     $remote_ip = $core->remote_ip();
-    
-    // Escape text
-    $db->escape($author);
-    $db->escape($project);
-    $db->escape($expire);
-    $db->escape($title);
-    $db->escape($data);
-    $db->escape($language);
-    $db->escape($private);
-    $db->escape($remote_ip);
-    
     $author = trim($author);
 
     // Generate a hash value
@@ -135,7 +123,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     // Generate the password hash
     $salt = substr(sha1(time()), rand(0, 34), 5);
     $pwd_hash = $password ? sha1(sha1($password) . $salt) : '';
-    
+
     // Generate URL key
     if ($config->url_key_enabled)
     {
@@ -146,10 +134,12 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         for($unique = 1; $unique <= 3; $unique++)
         {
             $url_key = substr(sha1(time() . $remote_ip . $salt . $unique), 0, 8);
-            
-            $sql = "SELECT id AS count FROM {$db->prefix}main WHERE urlkey = '{$url_key}'";
-            $row = $db->query($sql);
-            
+            $sql = "SELECT id AS count FROM {$db->prefix}main WHERE urlkey = :urlkey";
+
+            $row = $db->query($sql, array(
+                ':urlkey' => $url_key
+            ));
+
             if ($row == null)
             {
                 $skip_insert = false;
@@ -166,24 +156,35 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     {
         // Insert into the DB
         $sql = "INSERT INTO {$db->prefix}main " .
-               "(author, project, timestamp, expire, title, data, language, " .
-               "password, salt, private, hash, ip, urlkey) VALUES " .
-               "('{$author}', '{$project}', {$time}, {$expire}, '{$title}', " .
-               "'{$data}', " . "'{$language}', '{$pwd_hash}', '{$salt}', " .
-               ($private == "on" || $private == "yes" || $password ? "1" : "0") .
-               ", {$hash}, '{$remote_ip}', '{$url_key}')";
+               "(author, project, timestamp, expire, title, data, urlkey, " .
+               "language, password, salt, private, hash, ip) VALUES " .
+               "(:author, :project, :timestamp, :expire, :title, :data, :urlkey, " .
+               ":language, :password, :salt, :private, :hash, :ip)";
 
-        $db->query($sql);
-        $new_id = $db->get_id();
+        $db->query($sql, array(
+            ':author'       => $author,
+            ':project'      => $project,
+            ':timestamp'    => $time,
+            ':expire'       => $expire,
+            ':title'        => $title,
+            ':data'         => $data,
+            ':urlkey'       => $url_key,
+            ':language'     => $language,
+            ':password'     => $pwd_hash,
+            ':salt'         => $salt,
+            ':private'      => $private == 'on' || $private == 'yes' || $password ? 1 : 0,
+            ':hash'         => $hash,
+            ':ip'           => $remote_ip
+        ));
     }
 
     // Address API requests
     if ($mode == 'xml' || $mode == 'json')
     {
-        if ($new_id)
+        if ($db->insert_id)
         {
             $skin->assign(array(
-                'paste_id'    => $config->url_key_enabled ? "p{$url_key}" : $new_id,
+                'paste_id'    => $config->url_key_enabled ? "p{$url_key}" : $db->insert_id,
                 'paste_hash'  => $private ? $hash : '',
             ));
 
@@ -201,10 +202,10 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     }
     else
     {
-        if ($new_id)
+        if ($db->insert_id)
         {
             $hash_arg = ($private || $password) ? $hash : '';
-            $url = $nav->get_paste($new_id, $url_key, $hash_arg, $project, false);
+            $url = $nav->get_paste($db->insert_id, $url_key, $hash_arg, $project, false);
 
             if (!$password)
             {

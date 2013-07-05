@@ -26,13 +26,14 @@ if (empty($sid) || empty($username))
 }
 else
 {
-    $db->escape($username);
-    $db->escape($sid);
-
     // Validate session ID
     $sql = "SELECT sid FROM {$db->prefix}users " .
-           "WHERE username = '{$username}' AND sid = '{$sid}'";
-    $row = $db->query($sql, true);
+           "WHERE username = :username AND sid = :sid";
+
+    $row = $db->query($sql, array(
+        ':username' => $username,
+        ':sid'      => $sid
+    ), true);
 
     if ($row != null)
     {

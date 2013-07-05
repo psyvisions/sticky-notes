@@ -110,19 +110,24 @@ if ($user_save)
         'user_pass2'        => $user_pass2,
     ));
 
-    // Escape data
-    $db->escape($user_id);
-    $db->escape($user_username);
-    $db->escape($user_email);
-    $db->escape($user_fname);
-    $db->escape($user_lname);
-
     $disp_name = $user_fname . ' ' . $user_lname;
 
     $sql = "SELECT username, email FROM {$db->prefix}users " .
-           "WHERE (username = '{$user_username}' OR email = '{$user_email}') " .
-           "AND password <> '' " . ($user_id > 0 ? "AND id <> {$user_id}" : "");
-    $row = $db->query($sql, true);
+           "WHERE (username = :username OR email = :email) " .
+           "AND password <> '' ";
+
+    $params = array(
+        ':username' => $user_username,
+        ':email'    => $user_email,
+    );
+
+    if ($user_id > 0)
+    {
+        $sql .= 'AND id <> :id';
+        $params[':id'] = $user_id;
+    }
+
+    $row = $db->query($sql, $params, true);
 
     if ($row != null)
     {
@@ -149,20 +154,36 @@ if ($user_save)
             {
                 // Get the salt
                 $sql = "SELECT salt FROM {$db->prefix}users " .
-                       "WHERE id = {$user_id}";
-                $row = $db->query($sql, true);
+                       "WHERE id = :id";
+
+                $row = $db->query($sql, array(
+                    ':id' => $user_id
+                ), true);
 
                 // Generate password hash
                 $hash = sha1($user_pass1 . $row['salt']);
             }
 
             $sql = "UPDATE {$db->prefix}users " .
-                   "SET username='{$user_username}', " .
-                   "    email='{$user_email}', " .
-                   "    dispname='{$disp_name}' " .
-                   (!empty($user_pass1) ? ", password = '{$hash}' " : "") .
-                   "WHERE id = {$user_id}";
-            $db->query($sql);
+                   "SET username = :username, " .
+                   "    email = :email, " .
+                   "    dispname = :dispname " .
+                   (!empty($user_pass1) ? ", password = :password " : "") .
+                   "WHERE id = :id";
+
+            $params = array(
+                ':username' => $user_username,
+                ':email'    => $user_email,
+                ':dispname' => $disp_name,
+                ':id'       => $user_id
+            );
+
+            if (!empty($user_pass1))
+            {
+                $params[':password'] = $hash;
+            }
+
+            $db->query($sql, $params);
 
             // Update the username cookie if user updates own details
             $current_user = $core->variable('username_admin', '', true);
@@ -182,9 +203,15 @@ if ($user_save)
 
             $sql = "INSERT INTO {$db->prefix}users " .
                    "(username, password, salt, email, dispname) " .
-                   "VALUES ('{$user_username}', '{$hash}', '{$salt}', " .
-                   "        '{$user_email}', '{$disp_name}')";
-            $db->query($sql);
+                   "VALUES (:username, :password, :salt, :email, :dispname)";
+
+            $db->query($sql, array(
+                ':username' => $user_username,
+                ':password' => $hash,
+                ':salt'     => $salt,
+                ':email'    => $email,
+                ':dispname' => $disp_name
+            ));
         }
 
         $core->redirect($core->path() . '?mode=users');
@@ -245,13 +272,13 @@ if ($action == 'editor' && !$user_save)
     // In edit mode, load data
     if (!empty($user))
     {
-        // Escape the username
-        $db->escape($user);
-
         $sql = "SELECT * FROM {$db->prefix}users " .
-               "WHERE username = '{$user}' " .
+               "WHERE username = :username " .
                "AND password <> ''";
-        $row = $db->query($sql, true);
+
+        $row = $db->query($sql, array(
+            ':username' => $user
+        ), true);
 
         if (!empty($row['dispname']))
         {
@@ -281,13 +308,14 @@ if ($action == 'delete')
 {
     if ($user != $username)
     {
-        // Escape the username
-        $db->escape($user);
-
         $sql = "DELETE FROM {$db->prefix}users " .
-               "WHERE username = '{$user}' " .
+               "WHERE username = :username " .
                "AND password <> ''";
-        $db->query($sql);
+
+        $db->query($sql, array(
+            ':username' => $user
+        ));
+
         $core->redirect($core->path() . '?mode=users');
     }
 }

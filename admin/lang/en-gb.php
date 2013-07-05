@@ -97,7 +97,7 @@ $lang_data = array(
                                'confirmation.',
     'site_info'             => 'Site information',
     'php_version'           => 'PHP version',
-    'mysql_version'         => 'MySQL version',
+    'db_version'            => 'DB version',
     'server_load'           => 'Server load',
     'db_size'               => 'Database size',
     'paste_count'           => 'Total no. of pastes',

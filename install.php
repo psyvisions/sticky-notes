@@ -33,7 +33,7 @@ if (!is_writable(realpath('config.php')))
 }
 
 // Check if DB data is set
-$db_fields = array($config->db_host, $config->db_name, $config->db_username, 
+$db_fields = array($config->db_host, $config->db_name, $config->db_username,
                    $config->db_password, $config->db_prefix);
 
 foreach ($db_fields as $field)
@@ -55,7 +55,7 @@ if (!empty($rows) && count($rows) > 0)
 }
 
 // Create the config file
-$config->create($config->db_host, $config->db_port, $config->db_name, 
+$config->create($config->db_type, $config->db_host, $config->db_port, $config->db_name,
                 $config->db_username, $config->db_password, $config->db_prefix);
 
 // Create the table structure
@@ -85,7 +85,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}session (" .
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}cron (" .
            "timestamp INT(11) UNSIGNED NOT NULL DEFAULT 0, " .
            "locked TINYINT(1) NOT NULL DEFAULT 0) ENGINE = MyISAM");
-    
+
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}users (" .
            "id INT(12) UNSIGNED NOT NULL AUTO_INCREMENT, " .
            "username VARCHAR(50) NOT NULL, " .
@@ -95,8 +95,8 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}users (" .
            "dispname VARCHAR(100) DEFAULT '', " .
            "sid VARCHAR(40) DEFAULT '', " .
            "lastlogin INT(11) UNSIGNED DEFAULT 0, " .
-           "PRIMARY KEY(id)) ENGINE = MyISAM");           
-           
+           "PRIMARY KEY(id)) ENGINE = MyISAM");
+
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}ipbans (" .
            "ip VARCHAR(50) NOT NULL, " .
            "PRIMARY KEY(ip)) ENGINE = MyISAM");
@@ -125,8 +125,12 @@ $hash = sha1($password . $salt);
 // Add the default admin user
 $sql = "INSERT INTO {$db->prefix}users " .
         "(username, password, salt, email) " .
-        "VALUES ('admin', '{$hash}', '{$salt}', 'admin@sticky.notes')";
-$db->query($sql);
+        "VALUES ('admin', :password, :salt, 'admin@sticky.notes')";
+
+$db->query($sql, array(
+    ':password' => $hash,
+    ':salt'     => $salt
+));
 
 // Done!
 $gsod->trigger(

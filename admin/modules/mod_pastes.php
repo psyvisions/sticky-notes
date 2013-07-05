@@ -22,14 +22,12 @@ $spacer_visibility = 'visible';
 $detail_visibility = 'collapsed';
 $script_notification = '';
 $sql_where = '';
+$params = array();
 
 if (!$paste_search)
 {
     $paste_id = $paste_id_searched;
 }
-
-// Escape the paste id
-$db->escape($paste_id);
 
 // Get the sql where claud based on the type of paste id
 if (!empty($paste_id))
@@ -37,20 +35,22 @@ if (!empty($paste_id))
     if ($config->url_key_enabled && strtolower(substr($paste_id, 0, 1)) == 'p')
     {
         $paste_id = substr($paste_id, 1);
-        $sql_where = "WHERE urlkey = '{$paste_id}'";
+        $sql_where = "WHERE urlkey = :paste_id";
     }
     else if (is_numeric($paste_id))
     {
         $paste_id = intval($paste_id);
-        $sql_where = "WHERE id = {$paste_id}";
+        $sql_where = "WHERE id = :paste_id";
     }
+
+    $params = array(':paste_id' => trim($paste_id));
 }
 
 // Make public
 if ($paste_makepub)
 {
     $sql = "UPDATE {$db->prefix}main SET private=0, password='' " . $sql_where;
-    $db->query($sql);
+    $db->query($sql, $params);
 
     $module->notify($lang->get('made_public'));
 
@@ -64,7 +64,7 @@ if ($paste_makepub)
 if ($paste_rempass)
 {
     $sql = "UPDATE {$db->prefix}main SET password='' " . $sql_where;
-    $db->query($sql);
+    $db->query($sql, $params);
 
     $module->notify($lang->get('pass_removed'));
 
@@ -78,7 +78,7 @@ if ($paste_search || $paste_rempass || $paste_makepub)
 {
     $paste_id = trim($paste_id);
     $sql = "SELECT * FROM {$db->prefix}main " . $sql_where;
-    $row = $db->query($sql, true);
+    $row = $db->query($sql, $params, true);
 
     if ($row != null)
     {
@@ -107,7 +107,7 @@ if ($paste_search || $paste_rempass || $paste_makepub)
 if ($paste_delete)
 {
     $sql = "DELETE FROM {$db->prefix}main " . $sql_where;
-    $db->query($sql);
+    $db->query($sql, $params);
 
     $paste_id = 0;
     $module->notify($lang->get('paste_deleted'));
@@ -115,9 +115,9 @@ if ($paste_delete)
 
 // Set the module variables
 $skin->assign(array(
-    'spacer_visibility'         => $spacer_visibility,
-    'detail_visibility'         => $detail_visibility,
-    'paste_id'                  => ($paste_id > 0 ? $paste_id : ''),
+    'spacer_visibility'   => $spacer_visibility,
+    'detail_visibility'   => $detail_visibility,
+    'paste_id'            => ($paste_id > 0 ? $paste_id : ''),
 ));
 
 // Set the module data
