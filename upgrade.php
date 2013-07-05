@@ -13,7 +13,7 @@ include_once('init.php');
 
 /* COMMENT OUT WHEN UPGRADING */
 /* UNCOMMENT ONCE UPDATE IS COMPLETED */
-$gsod->trigger('Update file locked.');
+$gsod->trigger('Update file locked. Check out the README.md for upgrade instructions.');
 
 // Check is config file is present
 if (!file_exists(realpath('config.php')))
@@ -29,8 +29,15 @@ if (!is_writable(realpath('config.php')))
                    'to start installation.');
 }
 
+// Check if PDO is available
+if (!class_exists('PDO'))
+{
+    $gsod->trigger('PDO not found on your server. <a href="http://goo.gl/e6jyj">Click here' .
+                   '</a> to view the installation guide.');
+}
+
 // Check if DB data is set
-$db_fields = array($config->db_host, $config->db_name, $config->db_username, 
+$db_fields = array($config->db_host, $config->db_name, $config->db_username,
                    $config->db_password, $config->db_prefix);
 
 foreach ($db_fields as $field)

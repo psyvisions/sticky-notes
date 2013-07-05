@@ -16,7 +16,7 @@ include_once('init.php');
 
 /* COMMENT OUT WHEN INSTALLING */
 /* UNCOMMENT ONCE INSTALLING IS COMPLETED */
-$gsod->trigger('Install file locked. Check out the README file for installation instructions.');
+$gsod->trigger('Install file locked. Check out the README.md for installation instructions.');
 
 // Check is config file is present
 if (!file_exists(realpath('config.php')))
@@ -30,6 +30,13 @@ if (!is_writable(realpath('config.php')))
 {
     $gsod->trigger('Config file is not writable. Please adjust the permissions ' .
                    'to start installation.');
+}
+
+// Check if PDO is available
+if (!class_exists('PDO'))
+{
+    $gsod->trigger('PDO not found on your server. <a href="http://goo.gl/e6jyj">Click here' .
+                   '</a> to view the installation guide.');
 }
 
 // Check if DB data is set
