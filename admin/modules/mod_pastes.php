@@ -9,8 +9,8 @@
 */
 
 // Collect some data
-$paste_id = $core->variable('paste_id', 0);
-$paste_id_searched = $core->variable('paste_id_searched', 0);
+$paste_id = $core->variable('paste_id', '');
+$paste_id_orig = $paste_id;
 
 $paste_search = isset($_POST['paste_search']);
 $paste_rempass = isset($_POST['paste_rempass']);
@@ -23,11 +23,6 @@ $detail_visibility = 'collapsed';
 $script_notification = '';
 $sql_where = '';
 $params = array();
-
-if (!$paste_search)
-{
-    $paste_id = $paste_id_searched;
-}
 
 // Get the sql where claud based on the type of paste id
 if (!empty($paste_id))
@@ -76,7 +71,6 @@ if ($paste_rempass)
 // Search form submitted
 if ($paste_search || $paste_rempass || $paste_makepub)
 {
-    $paste_id = trim($paste_id);
     $sql = "SELECT * FROM {$db->prefix}main " . $sql_where;
     $row = $db->query($sql, $params, true);
 
@@ -109,7 +103,8 @@ if ($paste_delete)
     $sql = "DELETE FROM {$db->prefix}main " . $sql_where;
     $db->query($sql, $params);
 
-    $paste_id = 0;
+    $paste_id = '';
+    $paste_id_orig = '';
     $module->notify($lang->get('paste_deleted'));
 }
 
@@ -117,7 +112,7 @@ if ($paste_delete)
 $skin->assign(array(
     'spacer_visibility'   => $spacer_visibility,
     'detail_visibility'   => $detail_visibility,
-    'paste_id'            => ($paste_id > 0 ? $paste_id : ''),
+    'paste_id'            => !empty($paste_id_orig) ? $paste_id_orig : '',
 ));
 
 // Set the module data
