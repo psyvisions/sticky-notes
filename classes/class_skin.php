@@ -27,11 +27,11 @@ class skin
 
         $this->admin_skin_name = strtolower($config->admin_skin_name);
         $this->admin_skin_path = $core->path() . 'skins/' . strtolower($config->admin_skin_name);
+        $this->skin_path = $core->path() . 'skins/' . strtolower($config->skin_name);
         $this->skin_name = strtolower($config->skin_name);
         $this->skin_name_fancy = $config->skin_name;
-        $this->skin_vars = array();
         $this->skin_file = '';
-        $this->skin_path = $core->path() . 'skins/' . strtolower($config->skin_name);
+        $this->set_defaults();
     }
 
     // Returns the name of the active skin
@@ -89,8 +89,8 @@ class skin
                 $gsod->trigger($message);
             }
 
+            // Load the template file
             $data = file_get_contents($file_name);
-            $data = $this->set_defaults($data);
 
             foreach($this->skin_vars as $key => $value)
             {
@@ -112,32 +112,12 @@ class skin
     }
 
     // Function to assign default variables
-    function set_defaults($data)
+    function set_defaults()
     {
         global $core, $lang, $nav;
 
+        // Get the current project
         $project = $core->variable('project', '');
-
-        $data = str_replace("[[site_build]]", $core->build, $data);
-        $data = str_replace("[[site_logo]]",
-                             $this->skin_path . '/images/' . $lang->lang_name . '/logo.png', $data);
-        $data = str_replace("[[site_logo_rss]]",
-                             $core->base_uri() . 'skins/' . $this->skin_name .
-                             '/images/' . $lang->lang_name . '/logo_rss.png', $data);
-        $data = str_replace("[[page_title]]", $this->skin_title, $data);
-        $data = str_replace("[[admin_skin_path]]", $this->admin_skin_path, $data);
-        $data = str_replace("[[skin_path]]", $this->skin_path, $data);
-        $data = str_replace("[[addon_path]]", $core->root_path() . 'addons', $data);
-        $data = str_replace("[[skin_name]]", $this->skin_name_fancy, $data);
-        $data = str_replace("[[nav_home_rss]]", $core->base_uri(), $data);
-        $data = str_replace("[[nav_newpaste]]", $nav->get('nav_newpaste', $project), $data);
-        $data = str_replace("[[nav_archives]]", $nav->get('nav_archives', $project), $data);
-        $data = str_replace("[[nav_trending]]", $nav->get('nav_trending', $project), $data);
-        $data = str_replace("[[nav_rss]]", $nav->get('nav_rss', $project), $data);
-        $data = str_replace("[[nav_api]]", $nav->get('nav_api', $project), $data);
-        $data = str_replace("[[nav_help]]", $nav->get('nav_help', $project), $data);
-        $data = str_replace("[[nav_about]]", $nav->get('nav_about', $project), $data);
-        $data = str_replace("[[nav_admin]]", $nav->get('nav_admin'), $data);
 
         // Set the tagline
         $header_tagline = '~/' . $lang->get('tag_paste');
@@ -171,9 +151,28 @@ class skin
             $header_tagline .= ('/' . $lang->get('tag_documentation'));
         }
 
-        $data = str_replace("[[header_tagline]]", $header_tagline, $data);
-
-        return $data;
+        // Assign default data
+        $this->skin_vars = array(
+            'header_tagline'    => $header_tagline,
+            'site_build'        => $core->build,
+            'site_logo'         => $this->skin_path . '/images/' . $lang->lang_name . '/logo.png',
+            'site_logo_rss'     => $core->base_uri() . 'skins/' . $this->skin_name . '/images/' .
+                                   $lang->lang_name . '/logo_rss.png',
+            'page_title'        => $this->skin_title,
+            'admin_skin_path'   => $this->admin_skin_path,
+            'skin_path'         => $this->skin_path,
+            'addon_path'        => $core->root_path() . 'addons',
+            'skin_name'         => $this->skin_name_fancy,
+            'nav_home_rss'      => $core->base_uri(),
+            'nav_newpaste'      => $nav->get('nav_newpaste', $project),
+            'nav_archives'      => $nav->get('nav_archives', $project),
+            'nav_trending'      => $nav->get('nav_trending', $project),
+            'nav_rss'           => $nav->get('nav_rss', $project),
+            'nav_api'           => $nav->get('nav_api', $project),
+            'nav_help'          => $nav->get('nav_help', $project),
+            'nav_about'         => $nav->get('nav_about', $project),
+            'nav_admin'         => $nav->get('nav_admin'),
+        );
     }
 
     // Function to get full path of file

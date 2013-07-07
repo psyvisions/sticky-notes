@@ -18,13 +18,13 @@ define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSI
 include_once('classes/class_gsod.php');
 include_once('classes/class_core.php');
 include_once('classes/class_config.php');
+include_once('classes/class_nav.php');
 include_once('classes/class_cache.php');
 include_once('classes/class_email.php');
 include_once('classes/class_db.php');
 include_once('classes/class_lang.php');
 include_once('classes/class_skin.php');
 include_once('classes/class_api.php');
-include_once('classes/class_nav.php');
 include_once('classes/class_spamguard.php');
 include_once('addons/geshi/geshi.php');
 
@@ -34,6 +34,7 @@ $gsod = new gsod();
 // Instantiate general classes
 $core = new core();
 $config = new config();
+$nav = new nav();
 $cache = new cache();
 $email = new email();
 $db = new db();
@@ -41,7 +42,6 @@ $lang = new lang();
 $skin = new skin();
 $api = new api();
 $sg = new spamguard();
-$nav = new nav();
 
 // Instantiate admin classes
 if (defined('IN_ADMIN'))
