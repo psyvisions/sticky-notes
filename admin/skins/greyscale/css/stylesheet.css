@@ -442,12 +442,6 @@ label.radio > input[type="radio"]
     line-height: 35px;
 }
 
-.waitimg
-{
-    margin-left: 7px;
-    margin-bottom: -1px;
-}
-
 .hugefonts
 {
     font-size: 6em;
@@ -531,6 +525,11 @@ label.radio > input[type="radio"]
 .darkgreen
 {
     color: darkGreen;
+}
+
+.darkred
+{
+    color: darkRed;
 }
 
 .visible

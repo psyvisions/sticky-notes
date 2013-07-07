@@ -13,6 +13,7 @@ error_reporting(E_ALL);
 
 // Define constants
 define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSION');
+define('UPDATE_DL_PATH', 'https://github.com/sayakb/sticky-notes/zipball/master');
 
 // Include classes
 include_once('classes/class_gsod.php');

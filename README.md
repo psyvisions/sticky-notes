@@ -35,6 +35,10 @@ out for:
    recognize the php_flag directive, set magic_quotes to Off in your php.ini file
    as most webapps are designed to work without it. As of php 5.4.0, magic_quotes
    directive has been deprecated, so you can completely remove that line.
+ * We need the php_openssl extension for the update checker to work. Without that,
+   Sricky Notes will continue to work normally but the update check in the admin
+   dashboard will not work. It is recommended that you enable this extension in
+   your php.ini before installing Sticky Notes.
 
 Sticky notes uses PDO extension for database access. To enable PDO, look for the
 following in your php.ini

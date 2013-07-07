@@ -9,8 +9,12 @@
 
 // Startup function
 $(document).ready(function() {
-    $('#login_user').focus();
+    // Focus username field on login screen
+    if ($('#login_user').length > 0) {
+        $('#login_user').focus();
+    }
 
+    // Forgot password click event
     $('#forgot_password').click(function() {
         $('.field_login').hide();
         $('.field_reset').show();
@@ -19,6 +23,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // Back to login link click
     $('#back_login').click(function() {
         $('.field_login').show();
         $('.field_reset').hide();
@@ -27,6 +32,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // Multi select list select all event
     $('#mult_select').click(function() {
         $('#mult').children().attr('selected', 'selected');
         $('#mult').focus();
@@ -34,6 +40,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // Multi select list deselect all event
     $('#mult_deselect').click(function() {
         $('#mult').children().removeAttr('selected');
         $('#mult').focus();
@@ -41,6 +48,7 @@ $(document).ready(function() {
         return false;
     });
 
+    // Notification message handler
     if ($('#notification_message').html().trim().length > 0) {
         $('#notification')
             .show()
@@ -64,32 +72,33 @@ $(document).ready(function() {
         });
     }
 
-    if ($('#stickynotes_update').length &&
+    // Update checker
+    if ($('#stickynotes_update').length > 0 &&
         $('#stickynotes_update').html().length > 0) {
-        var url = '?ver=1';
+        var url = '?action=version';
         var current = parseInt($('#stickynotes_build_num').val());
 
-        var jqxhr = $.get(url, function(data) {
-            if (parseInt(data) > current)
-            {
-                $('#stickynotes_ver')
-                    .css('color', 'darkRed')
-                    .removeAttr('class');
-                $('.waitimg').hide();
+        $.get(url, function(data) {
+            if (parseInt(data) > current) {
+                $('#stickynotes_ver').attr('class', 'darkred');
+                $('#wait_version').hide();
                 $('#stickynotes_update').show();
             }
-            else
-            {
-                $('.waitimg').hide();
+            else {
+                $('#wait_version').hide();
             }
-        })
-        .error(function() {
-            $('.waitimg').hide();
         });
     }
-});
 
-function strpos (haystack, needle, offset) {
-    var i = (haystack + '').indexOf(needle, (offset || 0));
-    return i === -1 ? false : i;
-}
+    // Server load checker
+    if ($('#stickynotes_sysload').length > 0) {
+        setInterval(function() {
+            var url = '?action=sysload';
+
+            $.get(url, function(data) {
+                $('#stickynotes_sysload').html(data);
+                $('#wait_sysload').hide();
+            });
+        }, 2000);
+    }
+});

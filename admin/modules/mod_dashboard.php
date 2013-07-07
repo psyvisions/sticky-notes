@@ -8,8 +8,11 @@
 * All rights reserved. Do not remove this copyright notice.
 */
 
+// Get current action
+$action = $core->variable('action', '');
+
 // Check if we just want the version number
-if (isset($_GET['ver']))
+if ($action == 'version')
 {
     $version = file_get_contents(UPDATE_SERVER, false);
     $version = explode("\n", $version);
@@ -17,41 +20,40 @@ if (isset($_GET['ver']))
     die($version[1]);
 }
 
+// Check if we just want server load
+if ($action == 'sysload')
+{
+    $load = $core->server_load();
+    $load = $load !== false ? $load : $lang->get('n_a');
+
+    die($load);
+}
+
 // Get DB version
 $sql = "SELECT VERSION() AS ver";
 $row = $db->query($sql, array(), true);
 $db_ver = $row !== false && !empty($row['ver']) ? $row['ver'] : $lang->get('n_a');
 
-// Get the server load
-$server_load = $core->server_load() !== false ? $core->server_load() : $lang->get('n_a');
-
 // Get the DB size
 if ($config->db_type == 'mysql')
 {
-    $sql = "SHOW TABLE STATUS";
-    $rows = $db->query($sql);
-    $db_size_num = 0;
-    $postfix = array('KB', 'MB', 'GB', 'TB');
-    $postfix_idx = 0;
-
-    foreach($rows as $row)
-    {
-        $db_size_num += intval($row["Data_length"]) + intval($row["Index_length"]);
-    }
-
-    $db_size_num /= 1024;
-
-    while ($db_size_num > 1024)
-    {
-        $postfix_idx++;
-        $db_size_num /= 1024;
-    }
-
-    $db_size = strval(round($db_size_num, 2)) . ' ' . $postfix[$postfix_idx];
+    $db_size = $db->get_size();
+    $db_size = $skin->display_size($db_size);
 }
 else
 {
     $db_size = $lang->get('n_a');
+}
+
+// Get the cache size
+if ($cache->is_available)
+{
+    $cache_size = $cache->get_size();
+    $cache_size = $skin->display_size($cache_size);
+}
+else
+{
+    $cache_size = '<span class="darkred">' . $lang->get('cache_unvailable') . '</span>';
 }
 
 // Get the number of posts
@@ -60,9 +62,8 @@ $row = $db->query($sql, array(), true);
 $paste_count = $row['count'];
 
 // Make the new version link
-$update_url =  '&bull; ' . $lang->get('new_ver_available') . ' (' .
-               '<a href="https://github.com/sayakb/sticky-notes/zipball/master">' .
-               $lang->get('download_latest') . '</a>)';
+$update_url =  '&bull; ' . $lang->get('new_ver_available') . ' (<a href="' .
+               UPDATE_DL_PATH . '">' . $lang->get('download_latest') . '</a>)';
 
 // Assign skin data
 $skin->assign(array(
@@ -70,9 +71,10 @@ $skin->assign(array(
     'update_url'        => $update_url,
     'build_num'         => $core->build_num,
     'php_version'       => phpversion(),
+    'db_type'           => $config->db_type,
     'db_version'        => $db_ver,
-    'server_load'       => $server_load,
     'db_size'           => $db_size,
+    'cache_size'        => $cache_size,
     'paste_count'       => $paste_count,
 ));
 

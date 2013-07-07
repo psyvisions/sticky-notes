@@ -108,6 +108,20 @@ class db
             return false;
         }
     }
+
+    // Gets the database size
+    function get_size()
+    {
+        $rows = $this->query('SHOW TABLE STATUS');
+        $size = 0;
+
+        foreach($rows as $row)
+        {
+            $size += intval($row["Data_length"]) + intval($row["Index_length"]);
+        }
+
+        return $size;
+    }
 }
 
 ?>

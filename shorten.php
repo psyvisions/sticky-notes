@@ -21,7 +21,7 @@ $is_key = false;
 // We need the google API key for this to work
 if (empty($config->google_api_key))
 {
-    exit("ERROR");
+    die("ERROR");
 }
 
 // Prepare the paste ID for use
@@ -44,7 +44,7 @@ if (!empty($paste_id))
 }
 else
 {
-    exit("ERROR");
+    die("ERROR");
 }
 
 // Build the query based on whether a key or ID was used
@@ -74,7 +74,7 @@ if ($config->url_key_enabled && $row != null)
 // Check if something was returned
 if ($row == null)
 {
-    exit("ERROR");
+    die("ERROR");
 }
 
 // Validate the hash
@@ -82,7 +82,7 @@ if ($row['private'] == "1")
 {
     if (empty($hash) || $row['hash'] != $hash)
     {
-        exit("ERROR");
+        die("ERROR");
     }
 }
 
@@ -109,11 +109,11 @@ $response = json_decode($result, true);
 
 if (isset($response['id']))
 {
-    exit($response['id']);
+    die($response['id']);
 }
 else
 {
-    exit("ERROR");
+    die("ERROR");
 }
 
 ?>

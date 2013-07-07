@@ -18,14 +18,16 @@ class cache
     // Global vars
     var $cache_dir;
     var $is_available;
-    
+
     // Constructor
     function __construct()
     {
-        $this->cache_dir = realpath('./cache') . '/';
+        global $core;
+
+        $this->cache_dir = realpath("{$core->base_path}cache") . '/';
         $this->is_available = is_readable($this->cache_dir) && is_writable($this->cache_dir);
     }
-    
+
     // Function to add items to the cache
     function set($key, $value)
     {
@@ -38,7 +40,7 @@ class cache
             fclose($fp);
         }
     }
-    
+
     // Function to get data from the cache
     function get($key)
     {
@@ -51,21 +53,38 @@ class cache
                 return file_get_contents($filename);
             }
         }
-        
+
         return false;
     }
-    
+
+    // Get the cache size
+    function get_size()
+    {
+        $size = 0;
+        $dp = opendir($this->cache_dir);
+
+        while (($file = readdir($dp)) !== false)
+        {
+           if ($file != '.' && $file != '..' && substr($file, 0, 2) == 's_')
+           {
+                $size += filesize("{$this->cache_dir}{$file}");
+           }
+       }
+
+        return $size;
+    }
+
     // Garbage collector
     function _gc()
     {
         if ($this->is_available)
         {
             $dp = opendir($this->cache_dir);
-            
-            while (($file = readdir($dp)) !== false) 
-            { 
+
+            while (($file = readdir($dp)) !== false)
+            {
                if ($file != '.' && $file != '..' && substr($file, 0, 2) == 's_')
-               {  
+               {
                     $age = time() - filectime("{$this->cache_dir}{$file}");
 
                     // Delete files older than a day
@@ -73,7 +92,7 @@ class cache
                     {
                         @unlink("{$this->cache_dir}{$file}");
                     }
-               } 
+               }
            }
 
            closedir($dp);

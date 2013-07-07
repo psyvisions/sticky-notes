@@ -65,17 +65,22 @@ class skin
     // Function to set the page title
     function title($value)
     {
-        $this->skin_title = $value;
+        $this->assign('page_title', $value);
     }
 
     // Function to parse template variables
     function parse($file_name)
     {
-        global $lang, $gsod, $cache;
+        global $lang, $gsod, $cache, $core;
 
         // Try to get template data from cache
-        $cache_key = json_encode($this->skin_vars) . $file_name;
-        $data = $cache->get($cache_key);
+        $data = false;
+
+        if (!$core->in_admin())
+        {
+            $cache_key = json_encode($this->skin_vars) . $file_name;
+            $data = $cache->get($cache_key);
+        }
 
         // Data not in cache, parse the template file
         if ($data === false)
@@ -104,7 +109,10 @@ class skin
             $data = $lang->parse($data);
 
             // Add the data to cache
-            $cache->set($cache_key, $data);
+            if (!$core->in_admin())
+            {
+                $cache->set($cache_key, $data);
+            }
         }
 
         // Done!
@@ -158,7 +166,6 @@ class skin
             'site_logo'         => $this->skin_path . '/images/' . $lang->lang_name . '/logo.png',
             'site_logo_rss'     => $core->base_uri() . 'skins/' . $this->skin_name . '/images/' .
                                    $lang->lang_name . '/logo_rss.png',
-            'page_title'        => $this->skin_title,
             'admin_skin_path'   => $this->admin_skin_path,
             'skin_path'         => $this->skin_path,
             'addon_path'        => $core->root_path() . 'addons',
@@ -369,6 +376,21 @@ class skin
     function escape(&$data)
     {
         $data = preg_replace('/\[\[(.*?)\]\]/', '&#91;&#91;$1&#93;&#93;', $data);
+    }
+
+    // Formats size in bytes for display
+    function display_size($size)
+    {
+        $postfix = array('bytes', 'KB', 'MB', 'GB', 'TB');
+        $postfix_idx = 0;
+
+        while ($size > 1024)
+        {
+            $size /= 1024;
+            $postfix_idx++;
+        }
+
+        return strval(round($size, 2)) . ' ' . $postfix[$postfix_idx];
     }
 
     // Return checked status of checkbox/radio based on a condition
