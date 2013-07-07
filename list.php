@@ -27,7 +27,9 @@ if (empty($mode))
 
 // Global variables
 $count = 0;
+$total = 0;
 $output_data = '';
+$pagination = '';
 $published = date('d M Y, h:i:s e', 1288800000);
 
 // Validate mode
@@ -74,6 +76,7 @@ if (!empty($project))
 
 if ($trending)
 {
+    $time = time();
     $trend_time = 259200;
 
     if ($age == 'week')
@@ -90,31 +93,26 @@ if ($trending)
     }
     else if ($age == 'all')
     {
-        $trend_time = 0;
+        $trend_time = $time;
     }
 
     if ($trend_time > 0)
     {
-        $params[':timestamp'] = time() - $trend_time;
+        $params[':timestamp'] = $time - $trend_time;
         $sql_where .= ' AND timestamp >= :timestamp';
         $sql_order = 'hits DESC';
         $sql_limit = '10';
     }
 }
-
-// Get total number of posts and page numbers
-if (!$trending)
+else
 {
+    // Genarate page numbers for the list
     $sql = "SELECT COUNT(id) AS total FROM {$db->prefix}main WHERE {$sql_where}";
     $row = $db->query($sql, $params);
     $total = $row[0]['total'];
-}
-else
-{
-    $total = 10;
-}
 
-$pagination = $skin->pagination($total, $page);
+    $pagination = $skin->pagination($total, $page);
+}
 
 // Get the list
 $sql = "SELECT * FROM {$db->prefix}main WHERE {$sql_where} " .
@@ -284,7 +282,6 @@ $skin->assign(array(
     'list_pagination'   => $pagination,
     'feed_time'         => $published,
     'filter_visibility' => $skin->visibility($trending),
-    'pages_visibility'  => $skin->visibility($trending, true),
     'trending_now'      => $nav->get('nav_trending', $project),
     'trending_week'     => $nav->get('nav_trending', $project, $page, 'week'),
     'trending_month'    => $nav->get('nav_trending', $project, $page, 'month'),

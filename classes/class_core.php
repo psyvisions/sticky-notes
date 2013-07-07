@@ -204,9 +204,12 @@ class core
     // Method to return the server load
     function server_load()
     {
+        global $lang;
+
+        // Get the system's load based on the OS
         $os = strtolower(PHP_OS);
 
-        if (strpos($os, 'win') === FALSE)
+        if (strpos($os, 'win') === false)
         {
             if (file_exists('/proc/loadavg'))
             {
@@ -234,7 +237,7 @@ class core
             }
         }
 
-        return 'N/A';
+        return $lang->get('n_a');
     }
 }
 
