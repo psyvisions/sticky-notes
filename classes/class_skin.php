@@ -76,7 +76,7 @@ class skin
         // Try to get template data from cache
         $data = false;
 
-        if (!$core->in_admin())
+        if (!defined('IN_ADMIN'))
         {
             $cache_key = json_encode($this->skin_vars) . $file_name;
             $data = $cache->get($cache_key);
@@ -109,7 +109,7 @@ class skin
             $data = $lang->parse($data);
 
             // Add the data to cache
-            if (!$core->in_admin())
+            if (!defined('IN_ADMIN'))
             {
                 $cache->set($cache_key, $data);
             }

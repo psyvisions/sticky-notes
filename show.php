@@ -10,6 +10,7 @@
 
 // Invoke required files
 include_once('init.php');
+include_once('addons/geshi/geshi.php');
 
 // Collect some data
 $paste_id = $core->variable('id', '');

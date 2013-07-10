@@ -29,7 +29,7 @@ class lang
         global $core, $gsod;
 
         // Get language data from lang file
-        $lang_file = $core->in_admin() ? $this->admin_lang_name : $this->lang_name; 
+        $lang_file = defined('IN_ADMIN') ? $this->admin_lang_name : $this->lang_name; 
         
         if (file_exists(realpath("lang/{$lang_file}.php")))
         {

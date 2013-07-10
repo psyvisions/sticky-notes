@@ -27,7 +27,6 @@ include_once('classes/class_lang.php');
 include_once('classes/class_skin.php');
 include_once('classes/class_api.php');
 include_once('classes/class_spamguard.php');
-include_once('addons/geshi/geshi.php');
 
 // We need to instantiate the GSoD class first, just in case!
 $gsod = new gsod();
@@ -47,15 +46,12 @@ $sg = new spamguard();
 // Instantiate admin classes
 if (defined('IN_ADMIN'))
 {
-    include_once('admin/classes/class_auth.php');
-    include_once('admin/classes/class_module.php');
+    include_once('classes/class_auth.php');
+    include_once('classes/class_module.php');
 
     $auth = new auth();
     $module = new module();
 }
-
-// Define macros
-define('GESHI_LANG_PATH', $core->base_uri() . '/addons/geshi/geshi/');
 
 // Before we do anything, let's add a trailing slash
 // We skip this for admin links

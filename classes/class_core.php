@@ -39,7 +39,7 @@ class core
         $data = explode("\n", $data);
         $this->build = $data[0];
         $this->build_num = $data[1];
-        $this->base_path = $this->in_admin() ? '../' : '';
+        $this->base_path = defined('IN_ADMIN') ? '../' : '';
     }
 
     // Function to return current path
@@ -57,7 +57,7 @@ class core
     {
         $path = $this->path();
 
-        if (strpos($path, 'admin') !== false)
+        if (defined('IN_ADMIN') !== false)
         {
             return substr($path, 0, strrpos($path, 'admin'));
         }
@@ -65,14 +65,6 @@ class core
         {
             return $path;
         }
-    }
-
-    // Check if we are in admin path
-    function in_admin()
-    {
-        $path = $this->path();
-
-        return (strpos($path, 'admin') !== false);
     }
 
     // Function to return remote IP
