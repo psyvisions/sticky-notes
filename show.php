@@ -67,7 +67,7 @@ if (!empty($paste_id))
 }
 else
 {
-    $core->redirect($core->path() . 'all/');
+    $core->redirect($core->current_uri() . 'all/');
 }
 
 // Set up session for the paste
@@ -328,12 +328,12 @@ $skin->assign(array(
     'paste_info'         => $info,
     'paste_user'         => $user,
     'paste_timestamp'    => $row['timestamp'],
-    'raw_url'            => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, false, 'raw'),
+    'raw_url'            => $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, 'raw'),
     'share_url'          => urlencode($core->full_uri()),
     'share_title'        => urlencode($lang->get('paste') . ' #' . $skin_key),
     'error_visibility'   => 'hidden',
     'geshi_stylesheet'   => $code_style,
-    'shorten_url'        => $core->base_uri() . "shorten.php?id={$skin_key}&project={$project}&hash={$hash}",
+    'shorten_url'        => $core->current_uri() . "shorten.php?id={$skin_key}&project={$project}&hash={$hash}",
     'shorten_visibility' => $skin->visibility(empty($config->google_api_key), true),
 ));
 

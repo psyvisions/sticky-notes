@@ -87,7 +87,7 @@ if ($row['private'] == "1")
 }
 
 // Now that we know the paste exists, generate the paste URL
-$paste_url = $nav->get_paste($row['id'], $row['urlkey'], $hash, $project, true);
+$paste_url = $nav->get_paste($row['id'], $row['urlkey'], $hash, $project);
 
 // Create cURL
 $ch = curl_init();

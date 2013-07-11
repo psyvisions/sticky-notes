@@ -13,7 +13,7 @@ class core
     // Global vars
     var $build;
     var $build_num;
-    var $base_path;
+    var $root_dir;
 
     // Constructor
     function __construct()
@@ -39,23 +39,13 @@ class core
         $data = explode("\n", $data);
         $this->build = $data[0];
         $this->build_num = $data[1];
-        $this->base_path = defined('IN_ADMIN') ? '../' : '';
+        $this->root_dir = defined('IN_ADMIN') ? '../' : '';
     }
 
-    // Function to return current path
-    function path()
+    // Function to return root URI base
+    function root_uri()
     {
-        $path = $_SERVER['PHP_SELF'];
-        $snip = strrpos($path, '/');
-        $path = substr($path, 0, $snip + 1);
-
-        return $path;
-    }
-
-    // Function to return root path
-    function root_path()
-    {
-        $path = $this->path();
+        $path = $this->current_uri();
 
         if (defined('IN_ADMIN') !== false)
         {
@@ -64,6 +54,55 @@ class core
         else
         {
             return $path;
+        }
+    }
+
+    // Get the current URI base
+    function current_uri()
+    {
+        $path = $_SERVER['PHP_SELF'];
+        $snip = strrpos($path, '/');
+        $path = substr($path, 0, $snip + 1);
+
+        return $this->hostname() . $path;
+    }
+
+    // Get the full URI, uncluding the script name
+    function full_uri()
+    {
+        return $this->hostname() . $_SERVER['REQUEST_URI'];
+    }
+
+    // Function to return the script name
+    function script_name()
+    {
+        return $_SERVER['SCRIPT_NAME'];
+    }
+
+    // Returns the server's hostname
+    function hostname($add_protocol = true)
+    {
+        if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+        {
+            $hostname = $_SERVER['HTTP_X_FORWARDED_HOST'];
+        }
+        elseif (isset($_SERVER['HTTP_HOST']))
+        {
+            $hostname = $_SERVER['HTTP_HOST'];
+        }
+        else
+        {
+            $hostname = "unknown_host";
+        }
+
+        if ($add_protocol)
+        {
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+            return $protocol . '://' . $hostname;
+        }
+        else
+        {
+            return $hostname;
         }
     }
 
@@ -81,13 +120,13 @@ class core
             $expire = time() + ($expire * 24 * 60 * 60);
         }
 
-        setcookie('stickynotes_' . $name, $value, $expire, $this->root_path());
+        setcookie('stickynotes_' . $name, $value, $expire, $this->root_uri());
     }
 
     // Function to expire a cookie
     function unset_cookie($name)
     {
-        setcookie('stickynotes_' . $name, null, time() - 3600, $this->root_path());
+        setcookie('stickynotes_' . $name, null, time() - 3600, $this->root_uri());
     }
 
     // Function to fetch query strings / post data
@@ -123,57 +162,6 @@ class core
         {
             return $default;
         }
-    }
-
-    // Function to return the script name
-    function script_name()
-    {
-        return $_SERVER['SCRIPT_NAME'];
-    }
-
-    // Get the request URI
-    function request_uri()
-    {
-        return $_SERVER['REQUEST_URI'];
-    }
-
-    // Returns the server's hostname
-    function hostname($add_protocol = true)
-    {
-        if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-        {
-            $hostname = $_SERVER['HTTP_X_FORWARDED_HOST'];
-        }
-        elseif (isset($_SERVER['HTTP_HOST']))
-        {
-            $hostname = $_SERVER['HTTP_HOST'];
-        }
-        else
-        {
-            $hostname = "unknown_host";
-        }
-
-        if ($add_protocol)
-        {
-            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-            return $protocol . '://' . $hostname;
-        }
-        else
-        {
-            return $hostname;
-        }
-    }
-
-    // Get the base URI (this is NOT the script base path)
-    function base_uri()
-    {
-        return $this->hostname() . $this->path();
-    }
-
-    // Get the full URI
-    function full_uri()
-    {
-        return $this->hostname() . $this->request_uri();
     }
 
     // Method to replace square brackets with normal braces

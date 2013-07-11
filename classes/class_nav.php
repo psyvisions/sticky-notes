@@ -41,13 +41,13 @@ class nav
             global $core;
 
             // Set URL bases
-            $base = $core->path();
+            $base = $core->current_uri();
 
             $arg_project = !empty($project) ? '?project=' . $project : '?';
             $arg_page = $page > 1 ? "&page={$page}" : ""; 
             $arg_age = !empty($age) ? "&age={$age}" : "";
 
-            $rewrite_base = $core->path() . (!empty($project) ? "~{$project}/" : "");
+            $rewrite_base = $core->current_uri() . (!empty($project) ? "~{$project}/" : "");
             $rewrite_page = $page > 1 ? "{$page}/" : "";
             $rewrite_age = !empty($age) ? "{$age}/" : "";
 
@@ -94,14 +94,12 @@ class nav
     }
 
     // Get the URL for a paste
-    function get_paste($paste_id, $paste_key, $hash, $project, $full_url, $format = '')
+    function get_paste($paste_id, $paste_key, $hash, $project, $format = '')
     {
         global $core, $config;
         
         try
         {
-            $base_path = $full_url ? $core->base_uri() : $core->path();
-            
             // Determine whether to use ID or key
             if ($config->url_key_enabled && !empty($paste_key))
             {
@@ -114,17 +112,17 @@ class nav
             
             if ($this->rewrite_on)
             {
-                $url = $base_path . (!empty($project) ? "~{$project}/" : "") .
-                                    "{$key}/" .
-                                    (!empty($hash) ? "{$hash}/" : "") .
-                                    (!empty($format) ? "{$format}/" : "");
+                $url = $core->current_uri() . (!empty($project) ? "~{$project}/" : "") .
+                                           "{$key}/" .
+                                           (!empty($hash) ? "{$hash}/" : "") .
+                                           (!empty($format) ? "{$format}/" : "");
             }
             else
             {
-                $url = $base_path . "show.php?id={$key}" .
-                                    (!empty($hash) ? "&hash={$hash}" : "") .
-                                    (!empty($project) ? "&project={$project}" : "") .
-                                    (!empty($format) ? "&mode={$format}" : "");
+                $url = $core->current_uri() . "show.php?id={$key}" .
+                                           (!empty($hash) ? "&hash={$hash}" : "") .
+                                           (!empty($project) ? "&project={$project}" : "") .
+                                           (!empty($format) ? "&mode={$format}" : "");
             }
 
             return $url;

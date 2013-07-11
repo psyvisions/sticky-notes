@@ -223,7 +223,7 @@ foreach ($rows as $row)
     // Assign template variables
     $skin->assign(array(
         'paste_id'          => $key,
-        'paste_url'         => $nav->get_paste($row['id'], $row['urlkey'], null, $project, $rss),
+        'paste_url'         => $nav->get_paste($row['id'], $row['urlkey'], null, $project),
         'paste_title'       => $title,
         'paste_data'        => $code_data,
         'paste_lang'        => htmlspecialchars($row['language']),

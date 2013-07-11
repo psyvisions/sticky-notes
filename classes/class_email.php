@@ -20,7 +20,7 @@ class email
         global $config, $core;
 
         // Referene the SwiftMailer library
-        require_once "{$core->base_path}addons/swiftmailer/swift_required.php";
+        require_once "{$core->root_dir}addons/swiftmailer/swift_required.php";
 
         // Create the Transport
         $transport = Swift_SmtpTransport::newInstance($config->smtp_host, $config->smtp_port);
@@ -49,7 +49,7 @@ class email
         global $config, $core;
 
         // Load the template
-        $tpl = realpath("{$core->base_path}templates/email/{$config->lang_name}/{$file}.tpl");
+        $tpl = realpath("{$core->root_dir}templates/email/{$config->lang_name}/{$file}.tpl");
 
         if (file_exists($tpl))
         {

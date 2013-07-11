@@ -22,7 +22,7 @@ $username = $core->variable('username_admin', '', true);
 // Check if session cookie is set
 if (empty($sid) || empty($username))
 {
-    $core->redirect($core->path() . 'login.php');
+    $core->redirect($core->current_uri() . 'login.php');
 }
 else
 {
@@ -45,7 +45,7 @@ else
         // Unset the cookie and serve the login screen
         $core->unset_cookie('session_id_admin');
         $core->unset_cookie('username_admin');
-        $core->redirect($core->path() . 'login.php');
+        $core->redirect($core->current_uri() . 'login.php');
     }
 }
 
@@ -68,15 +68,15 @@ $skin->assign(array(
     'module_title'      => $module_title,
     'module_data'       => $module_data,
 
-    'home_url'          => $core->root_path(),
-    'dashboard_url'     => $core->path(),
-    'pastes_url'        => $core->path() . '?mode=pastes',
-    'users_url'         => $core->path() . '?mode=users',
-    'ipbans_url'        => $core->path() . '?mode=ipbans',
-    'email_url'         => $core->path() . '?mode=email',
-    'auth_url'          => $core->path() . '?mode=auth',
-    'config_url'        => $core->path() . '?mode=config',
-    'logout_url'        => $core->path() . '?mode=logout',
+    'home_url'          => $core->root_uri(),
+    'dashboard_url'     => $core->current_uri(),
+    'pastes_url'        => $core->current_uri() . '?mode=pastes',
+    'users_url'         => $core->current_uri() . '?mode=users',
+    'ipbans_url'        => $core->current_uri() . '?mode=ipbans',
+    'email_url'         => $core->current_uri() . '?mode=email',
+    'auth_url'          => $core->current_uri() . '?mode=auth',
+    'config_url'        => $core->current_uri() . '?mode=config',
+    'logout_url'        => $core->current_uri() . '?mode=logout',
 
     'dashboard_class'   => ($mode == "dashboard" ? 'nav_selected' : 'nav_unselected'),
     'pastes_class'      => ($mode == "pastes" ? 'nav_selected' : 'nav_unselected'),

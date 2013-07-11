@@ -24,7 +24,7 @@ class cache
     {
         global $core;
 
-        $this->cache_dir = realpath("{$core->base_path}cache") . '/';
+        $this->cache_dir = realpath("{$core->root_dir}cache") . '/';
         $this->is_available = is_readable($this->cache_dir) && is_writable($this->cache_dir);
     }
 

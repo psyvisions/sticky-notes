@@ -71,7 +71,7 @@ if ($reset)
             $email->assign(array(
                 'user'      => $data['user'],
                 'pass'      => $data['pass'],
-                'host'      => $core->base_uri(),
+                'host'      => $core->current_uri(),
                 'login_url' => $core->full_uri(),
             ));
 
@@ -105,7 +105,7 @@ $toplink = preg_replace('/\_\_sitename\_\_/', $config->site_title, $lang->get('b
 
 $skin->assign(array(
     'top_link'          => $toplink,
-    'home_url'          => $core->root_path(),
+    'home_url'          => $core->root_uri(),
     'banner_type'       => $banner_type,
     'banner_text'       => $banner_text,
     'banner_visibility' => $banner_visibility,

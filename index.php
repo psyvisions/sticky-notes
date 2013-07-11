@@ -205,7 +205,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         if ($db->insert_id)
         {
             $hash_arg = ($private || $password) ? $hash : '';
-            $url = $nav->get_paste($db->insert_id, $url_key, $hash_arg, $project, false);
+            $url = $nav->get_paste($db->insert_id, $url_key, $hash_arg, $project);
 
             if (!$password)
             {

@@ -55,7 +55,7 @@ if (defined('IN_ADMIN'))
 
 // Before we do anything, let's add a trailing slash
 // We skip this for admin links
-$url = $core->request_uri();
+$url = $core->full_uri();
 
 if (strrpos($url, '/') != (strlen($url) - 1) && $nav->rewrite_on &&
     strpos($url, 'admin') === false && strpos($url, '.php') === false)
@@ -78,7 +78,7 @@ $db->connect();
 
 // Assign defaut variables
 $skin->assign(array(
-    'root_path'         => $core->path(),
+    'root_path'         => $core->current_uri(),
     'msg_visibility'    => 'hidden',
 ));
 

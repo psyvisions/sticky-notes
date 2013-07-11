@@ -44,7 +44,7 @@ class module
 
         if (!in_array($mode, $modes_ary))
         {
-            $core->redirect($core->path());
+            $core->redirect($core->current_uri());
         }
     }
 

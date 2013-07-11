@@ -47,7 +47,7 @@ class lang
 
         foreach ($lang_data as $key => $value)
         {
-            $value = str_replace("[[host]]", $core->base_uri(), $value);
+            $value = str_replace("[[host]]", $core->current_uri(), $value);
             $data = str_replace("{{{$key}}}", $value, $data);
         }
 

@@ -28,19 +28,19 @@ $actions_ary = array('editor', 'delete');
 
 if (!empty($action) && !in_array($action, $actions_ary))
 {
-    $core->redirect($core->path() . '?mode=users');
+    $core->redirect($core->current_uri() . '?mode=users');
 }
 
 // Create button was pressed
 if ($user_new)
 {
-    $core->redirect($core->path() . '?mode=users&action=editor');
+    $core->redirect($core->current_uri() . '?mode=users&action=editor');
 }
 
 // Cancel button was pressed
 if ($user_cancel)
 {
-    $core->redirect($core->path() . '?mode=users');
+    $core->redirect($core->current_uri() . '?mode=users');
 }
 
 // Save button was pressed
@@ -214,7 +214,7 @@ if ($user_save)
             ));
         }
 
-        $core->redirect($core->path() . '?mode=users');
+        $core->redirect($core->current_uri() . '?mode=users');
     }
 
     // Set editor title
@@ -247,8 +247,8 @@ if (empty($action))
                 'user_name'             => htmlspecialchars($row['dispname']),
                 'user_email'            => htmlspecialchars($row['email']),
                 'user_email_hash'       => md5(strtolower($row['email'])),
-                'user_edit_link'        => $core->path() . '?mode=users&action=editor&user=' . $row['username'],
-                'user_delete_link'      => $core->path() . '?mode=users&action=delete&user=' . $row['username'],
+                'user_edit_link'        => $core->current_uri() . '?mode=users&action=editor&user=' . $row['username'],
+                'user_delete_link'      => $core->current_uri() . '?mode=users&action=delete&user=' . $row['username'],
                 'delete_visibility'     => $row['username'] == $username ? 'hidden' : '',
             ));
 
@@ -316,7 +316,7 @@ if ($action == 'delete')
             ':username' => $user
         ));
 
-        $core->redirect($core->path() . '?mode=users');
+        $core->redirect($core->current_uri() . '?mode=users');
     }
 }
 

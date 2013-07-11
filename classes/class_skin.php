@@ -26,8 +26,8 @@ class skin
         global $core, $config;
 
         $this->admin_skin_name = strtolower($config->admin_skin_name);
-        $this->admin_skin_path = $core->path() . 'skins/' . strtolower($config->admin_skin_name);
-        $this->skin_path = $core->path() . 'skins/' . strtolower($config->skin_name);
+        $this->admin_skin_path = $core->current_uri() . 'skins/' . strtolower($config->admin_skin_name);
+        $this->skin_path = $core->current_uri() . 'skins/' . strtolower($config->skin_name);
         $this->skin_name = strtolower($config->skin_name);
         $this->skin_name_fancy = $config->skin_name;
         $this->skin_file = '';
@@ -164,13 +164,13 @@ class skin
             'header_tagline'    => $header_tagline,
             'site_build'        => $core->build,
             'site_logo'         => $this->skin_path . '/images/' . $lang->lang_name . '/logo.png',
-            'site_logo_rss'     => $core->base_uri() . 'skins/' . $this->skin_name . '/images/' .
+            'site_logo_rss'     => $core->current_uri() . 'skins/' . $this->skin_name . '/images/' .
                                    $lang->lang_name . '/logo_rss.png',
             'admin_skin_path'   => $this->admin_skin_path,
             'skin_path'         => $this->skin_path,
-            'addon_path'        => $core->root_path() . 'addons',
+            'addon_path'        => $core->root_uri() . 'addons',
             'skin_name'         => $this->skin_name_fancy,
-            'nav_home_rss'      => $core->base_uri(),
+            'nav_home_rss'      => $core->current_uri(),
             'nav_newpaste'      => $nav->get('nav_newpaste', $project),
             'nav_archives'      => $nav->get('nav_archives', $project),
             'nav_trending'      => $nav->get('nav_trending', $project),

@@ -23,7 +23,7 @@ if (!empty($ban_del))
         ':ban_del' => urlencode($ban_del)
     ));
 
-    $core->redirect($core->path() . '?mode=ipbans');
+    $core->redirect($core->current_uri() . '?mode=ipbans');
 }
 
 // Get a list of IP bans
@@ -88,7 +88,7 @@ if (!empty($rows))
     {
         $skin->assign(array(
             'ipbans_entry'      => $row['ip'],
-            'ipbans_delete'     => '<a href="' . ($core->path() . '?mode=ipbans&delete=' . urlencode($row['ip'])) .
+            'ipbans_delete'     => '<a href="' . ($core->current_uri() . '?mode=ipbans&delete=' . urlencode($row['ip'])) .
                                    '" onclick="return confirm(\'' . $lang->get('action_confirm') . '\')"><b>' .
                                    $lang->get('delete') . '</b></a>',
         ));
