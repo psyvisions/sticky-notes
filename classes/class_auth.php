@@ -119,11 +119,7 @@ class auth
         global $core;
 
         $hash = sha1(time() . $core->remote_ip() . $unique);
-
-        if ($length < 40)
-        {
-            $hash = substr($hash, rand(0, 40 - $length), $length);
-        }
+        $hash = substr($hash, rand(0, 39 - $length), $length);
 
         return $hash;
     }
