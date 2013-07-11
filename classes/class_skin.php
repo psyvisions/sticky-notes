@@ -271,6 +271,22 @@ class skin
         }
     }
 
+    // Instantiates GeSHi with default settings
+    function geshi($code, $language)
+    {
+        require_once "addons/geshi/geshi.php";
+
+        $geshi = new GeSHi($code, $language);
+        $geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS, 2);
+        $geshi->set_header_type(GESHI_HEADER_DIV);
+        $geshi->set_line_style('background: #f7f7f7; text-shadow: 0px 1px #fff; padding: 1px;',
+                               'background: #fbfbfb; text-shadow: 0px 1px #fff; padding: 1px;');
+        $geshi->set_code_style('vertical-align: middle;', true);
+        $geshi->set_overall_style('word-wrap:break-word;');
+
+        return $geshi;
+    }
+
     // Function to generate pagination
     function pagination($total_pastes, $current_page)
     {
