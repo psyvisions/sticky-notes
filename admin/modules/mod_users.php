@@ -161,7 +161,7 @@ if ($user_save)
                 ), true);
 
                 // Generate password hash
-                $hash = sha1($user_pass1 . $row['salt']);
+                $hash = $auth->create_password($user_pass1, $row['salt']);
             }
 
             $sql = "UPDATE {$db->prefix}users " .
@@ -198,8 +198,8 @@ if ($user_save)
         // It is an insert operation
         else
         {
-            $salt = substr(sha1(time()), rand(0, 34), 5);
-            $hash = sha1($user_pass1 . $salt);
+            $salt = $auth->create_uid(5);
+            $hash = $auth->create_password($user_pass1, $salt);
 
             $sql = "INSERT INTO {$db->prefix}users " .
                    "(username, password, salt, email, dispname) " .

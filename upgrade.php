@@ -48,12 +48,16 @@ foreach ($db_fields as $field)
     }
 }
 
-// Check if the tables already exist
+// Add the new columns
 $sql = "ALTER TABLE {$db->prefix}main ADD (" .
        "title VARCHAR(25) DEFAULT '', " .
        "urlkey VARCHAR(8) DEFAULT '', " .
        "hits INT(11) NOT NULL DEFAULT 0)";
 $db->query($sql);
+
+// Change the password column lengths to 60
+$db->query("ALTER TABLE {$db->prefix}main MODIFY password VARCHAR(60) NOT NULL");
+$db->query("ALTER TABLE {$db->prefix}users MODIFY password VARCHAR(60) NOT NULL");
 
 // Create indexes
 $db->query("CREATE INDEX {$db->prefix}idx_urlkey ON {$db->prefix}main(urlkey)");

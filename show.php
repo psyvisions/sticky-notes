@@ -184,9 +184,22 @@ if (!empty($row['password']) && empty($password) && !$exempt)
 // Check password
 if (!empty($row['password']) && !empty($password) && !$exempt)
 {
-    $check = sha1(sha1($password) . $row['salt']);
+    if ($auth->check_password('main', $row['password'], $password, $row['salt']))
+    {
+        // Create a session
+        $sid = $auth->create_uid();
 
-    if ($check != $row['password'])
+        $sql = "INSERT INTO {$db->prefix}session " .
+               "(sid, timestamp) VALUES (:sid, :timestamp)";
+
+        $db->query($sql, array(
+            ':sid'          => $sid,
+            ':timestamp'    => time()
+        ));
+
+        $core->set_cookie('session_id_' . $paste_id, $sid);
+    }
+    else
     {
         if ($mode == 'xml' || $mode == 'json')
         {
@@ -207,21 +220,6 @@ if (!empty($row['password']) && !empty($password) && !$exempt)
 
             $skin->kill();
         }
-    }
-    else
-    {
-        // Create a session
-        $sid = sha1(time() . $core->remote_ip());
-
-        $sql = "INSERT INTO {$db->prefix}session " .
-               "(sid, timestamp) VALUES (:sid, :timestamp)";
-
-        $db->query($sql, array(
-            ':sid'          => $sid,
-            ':timestamp'    => time()
-        ));
-
-        $core->set_cookie('session_id_' . $paste_id, $sid);
     }
 }
 

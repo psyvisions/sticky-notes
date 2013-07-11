@@ -6,6 +6,7 @@ Version 0.4
  * Add password reset option - [Issue #13](http://goo.gl/3RkPJ)
  * Add support for alphanumeric paste IDs - [Issue #7](http://goo.gl/9SYlQ)
  * Add support for goo.gl URL shortener - [Issue #8](http://goo.gl/VzqJP)
+ * Move to blowfish for encrypting passwords
  * Support for multiple DB engines (mysql, pgsql, mssql, sybase and sqlite)
  * Enhanced DB security through PDO
  * Performance improvements through template caching

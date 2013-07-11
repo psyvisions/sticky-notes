@@ -19,7 +19,7 @@ class module
         {
             // Set globals
             global $core, $lang, $skin, $db, $config, $module, $username, $sid, $mode,
-                   $module_data, $module_title, $sg, $gsod, $cache;
+                   $sg, $gsod, $cache, $auth, $module_data, $module_title;
 
             // Include the module
             include("modules/mod_{$module_name}.php");

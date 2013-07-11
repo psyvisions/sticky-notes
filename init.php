@@ -27,11 +27,13 @@ include_once('classes/class_lang.php');
 include_once('classes/class_skin.php');
 include_once('classes/class_api.php');
 include_once('classes/class_spamguard.php');
+include_once('classes/class_auth.php');
+include_once('classes/class_module.php');
 
 // We need to instantiate the GSoD class first, just in case!
 $gsod = new gsod();
 
-// Instantiate general classes
+// Instantiate classes
 $core = new core();
 $config = new config();
 $nav = new nav();
@@ -42,16 +44,8 @@ $lang = new lang();
 $skin = new skin();
 $api = new api();
 $sg = new spamguard();
-
-// Instantiate admin classes
-if (defined('IN_ADMIN'))
-{
-    include_once('classes/class_auth.php');
-    include_once('classes/class_module.php');
-
-    $auth = new auth();
-    $module = new module();
-}
+$auth = new auth();
+$module = new module();
 
 // Before we do anything, let's add a trailing slash
 // We skip this for admin links

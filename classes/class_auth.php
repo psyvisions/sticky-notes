@@ -14,13 +14,22 @@ class auth
     var $sid;
     var $max_age;
 
+    // Constructor
+    function __construct()
+    {
+        global $core;
+
+        // Include the password_* compatibility library
+        require_once "{$core->root_dir}addons/passcompat/password.php";
+    }
+
     // Method for creating a new session and killing expired ones
     function create_session()
     {
         global $core, $db;
 
         // Generate a session ID and set the maximum session age
-        $this->sid = sha1(time() . $core->remote_ip());
+        $this->sid = $this->create_uid();
         $this->max_age = time() - (60 * 60);
 
         // Expire old sessions
@@ -62,6 +71,125 @@ class auth
         }
     }
 
+    // Reset user password
+    function reset($username)
+    {
+        global $db;
+
+        // Get the user details
+        $sql = "SELECT * FROM {$db->prefix}users " .
+               "WHERE username = :username " .
+               "AND password <> ''";
+
+        $row = $db->query($sql, array(
+            ':username' => $username
+        ), true);
+
+        // Check if the user exists
+        if ($row != null)
+        {
+            // Generate and update a new password
+            $newpass = $this->create_uid(8);
+            $hash = $this->create_password($newpass, $row['salt']);
+
+            $sql = "UPDATE {$db->prefix}users " .
+                   "SET password = :hash " .
+                   "WHERE id = :id";
+
+            $db->query($sql, array(
+                ':hash' => $hash,
+                ':id'   => $row['id']
+            ));
+
+            // Return the new password
+            return array(
+                'user'  => $row['dispname'] ? $row['dispname'] : $row['username'],
+                'email' => $row['email'],
+                'pass'  => $newpass,
+            );
+        }
+
+        // No user found
+        return false;
+    }
+
+    // Creates a unique identifier for specific length
+    function create_uid($length = 40, $unique = 0)
+    {
+        global $core;
+
+        $hash = sha1(time() . $core->remote_ip() . $unique);
+
+        if ($length < 40)
+        {
+            $hash = substr($hash, rand(0, 40 - $length), $length);
+        }
+
+        return $hash;
+    }
+
+    // Create a new password hash
+    function create_password($password, $salt)
+    {
+        return password_hash($password . $salt, PASSWORD_BCRYPT);
+    }
+
+    // Checks a password hash, updates it to bcrypt if still using sha1
+    function check_password($table, $hash, $password, $salt)
+    {
+        global $db;
+
+        // Hash created using blowfish algorithm
+        if ($hash[0] == '$')
+        {
+            return password_verify($password . $salt, $hash);
+        }
+
+        // Hash created using secure hash algorithm
+        else
+        {
+            $new_hash = $this->create_password($password, $salt);
+            $old_hash = '';
+
+            switch($table)
+            {
+                case 'main':
+                    $old_hash = sha1(sha1($password) . $salt);
+                    break;
+
+                case 'users':
+                    $old_hash = sha1($password . $salt);
+                    break;
+
+                default:
+                    return false;
+            }
+
+            // Password matches with old method, now migrate all pwds with this hash
+            if ($hash == $old_hash)
+            {
+                $sql = "UPDATE {$db->prefix}{$table} " .
+                       "SET password = :new_hash " .
+                       "WHERE password = :old_hash";
+
+                $db->query($sql, array(
+                    ':old_hash' => $old_hash,
+                    ':new_hash' => $new_hash
+                ));
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Escapes auth string needed for plugins like LDAP
+    function escape($string)
+    {
+        return str_replace(array('*', '\\', '(', ')'), array('\\*', '\\\\', '\\(', '\\)'), $string);
+    }
+
     // DB based authentication
     function authenticate_db($username, $password)
     {
@@ -79,9 +207,7 @@ class auth
         // Check if the user exists
         if ($row != null)
         {
-            $hash = sha1($password . $row['salt']);
-
-            if ($row['password'] == $hash)
+            if ($this->check_password('users', $row['password'], $password, $row['salt']))
             {
                 // Update the session ID and details for the user
                 $sql = "UPDATE {$db->prefix}users SET sid = :sid " .
@@ -219,54 +345,6 @@ class auth
 
         // Username was not found
         return false;
-    }
-
-    // Reset user password
-    function reset($username)
-    {
-        global $db;
-
-        // Get the user details
-        $sql = "SELECT * FROM {$db->prefix}users " .
-               "WHERE username = :username " .
-               "AND password <> ''";
-
-        $row = $db->query($sql, array(
-            ':username' => $username
-        ), true);
-
-        // Check if the user exists
-        if ($row != null)
-        {
-            // Generate and update a new password
-            $newpass = substr(sha1(time()), rand(0, 31), 8);
-            $hash = sha1($newpass . $row['salt']);
-
-            $sql = "UPDATE {$db->prefix}users " .
-                   "SET password = :hash " .
-                   "WHERE id = :id";
-
-            $db->query($sql, array(
-                ':hash' => $hash,
-                ':id'   => $row['id']
-            ));
-
-            // Return the new password
-            return array(
-                'user'  => $row['dispname'] ? $row['dispname'] : $row['username'],
-                'email' => $row['email'],
-                'pass'  => $newpass,
-            );
-        }
-
-        // No user found
-        return false;
-    }
-
-    // Escapes auth string needed for plugins like LDAP
-    function escape($string)
-    {
-        return str_replace(array('*', '\\', '(', ')'), array('\\*', '\\\\', '\\(', '\\)'), $string);
     }
 }
 

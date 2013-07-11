@@ -75,7 +75,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}main (" .
            "title VARCHAR(25) DEFAULT '', " .
            "data MEDIUMTEXT NOT NULL, " .
            "language VARCHAR(50) NOT NULL DEFAULT 'php', " .
-           "password VARCHAR(40) NOT NULL, " .
+           "password VARCHAR(60) NOT NULL, " .
            "salt VARCHAR(5) NOT NULL, " .
            "private TINYINT(1) NOT NULL DEFAULT 0, " .
            "hash INT(12) UNSIGNED NOT NULL, " .
@@ -96,7 +96,7 @@ $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}cron (" .
 $db->query("CREATE TABLE IF NOT EXISTS {$db->prefix}users (" .
            "id INT(12) UNSIGNED NOT NULL AUTO_INCREMENT, " .
            "username VARCHAR(50) NOT NULL, " .
-           "password VARCHAR(40) NOT NULL, " .
+           "password VARCHAR(60) NOT NULL, " .
            "salt VARCHAR(5) NOT NULL, " .
            "email VARCHAR(100) NOT NULL, " .
            "dispname VARCHAR(100) DEFAULT '', " .
@@ -125,14 +125,14 @@ $db->query("CREATE INDEX {$db->prefix}idx_adminsid ON {$db->prefix}users(sid)");
 $db->query("INSERT INTO {$db->prefix}cron VALUES (0, 0)");
 
 // Generate a salt and password
-$salt = substr(sha1(time()), rand(0, 34), 5);
-$password = substr(sha1(sha1(time())), rand(0, 31), 8);
-$hash = sha1($password . $salt);
+$salt = $auth->create_uid(5);
+$password = $auth->create_uid(8);
+$hash = $auth->create_password($password, $salt);
 
 // Add the default admin user
 $sql = "INSERT INTO {$db->prefix}users " .
-        "(username, password, salt, email) " .
-        "VALUES ('admin', :password, :salt, 'admin@sticky.notes')";
+       "(username, password, salt, email) " .
+       "VALUES ('admin', :password, :salt, 'admin@sticky.notes')";
 
 $db->query($sql, array(
     ':password' => $hash,

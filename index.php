@@ -113,16 +113,13 @@ if ($paste_submit || $api_submit)
 
 if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
 {
-    $remote_ip = $core->remote_ip();
     $author = trim($author);
-
-    // Generate a hash value
     $timestr = time();
     $hash = substr($timestr . $timestr, rand(0, 5), 8);
 
     // Generate the password hash
-    $salt = substr(sha1(time()), rand(0, 34), 5);
-    $pwd_hash = $password ? sha1(sha1($password) . $salt) : '';
+    $salt = $auth->create_uid(5);
+    $pwd_hash = $password ? $auth->create_password($password, $salt) : '';
 
     // Generate URL key
     if ($config->url_key_enabled)
@@ -133,7 +130,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
         // We retry 3 times only
         for($unique = 1; $unique <= 3; $unique++)
         {
-            $url_key = substr(sha1(time() . $remote_ip . $salt . $unique), 0, 8);
+            $url_key = $auth->create_uid(8, $unique);
             $sql = "SELECT id AS count FROM {$db->prefix}main WHERE urlkey = :urlkey";
 
             $row = $db->query($sql, array(
@@ -174,7 +171,7 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
             ':salt'         => $salt,
             ':private'      => $private == 'on' || $private == 'yes' || $password ? 1 : 0,
             ':hash'         => $hash,
-            ':ip'           => $remote_ip
+            ':ip'           => $core->remote_ip()
         ));
     }
 
