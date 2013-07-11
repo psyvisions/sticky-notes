@@ -84,5 +84,5 @@ Upgrading
 You can upgrade your Sticky Notes installation from v0.3 to v0.4 using the
 automated update script. Simply comment out line 16 and visit
 http://yoursite.com/upgrade in your browser. Once upgrade is complete,
-remember to comment out line 16 again or remove upgrade.php from your root
+remember to uncomment line 16 again or remove upgrade.php from your root
 folder.
