@@ -278,6 +278,7 @@ $skin->assign(array(
     'list_pagination'   => $pagination,
     'feed_time'         => $published,
     'filter_visibility' => $skin->visibility($trending),
+    'pages_visibility'  => $skin->visibility($trending, true),
     'trending_now'      => $nav->get('nav_trending', $project),
     'trending_week'     => $nav->get('nav_trending', $project, $page, 'week'),
     'trending_month'    => $nav->get('nav_trending', $project, $page, 'month'),
