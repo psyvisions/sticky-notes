@@ -60,7 +60,17 @@ installed" on the browser window.
 Now uncomment line 19 again. This is strongly recommended for security reasons.
 You may as well completely remove install.php from your host's root folder.
 
-Step 4 - Adding themes
+Step 4 - Cache configuration
+-----------------------------
+The only thing you need to do is to make the cache/ folder writable by apache.
+
+If you want to disable caching, simply make the cache/ folder inaccessible to
+apache or you may completely remove it from your web server. However, for high 
+volume sites, it is recommended that you enable caching.
+
+Sticky Notes cache works out of the box and does not depend on any PHP libraries.
+
+Step 5 - Adding themes
 -----------------------
 Copy the theme folder within the "skins" folder. Make sure the name of the folder
 is in lower case. For example, if the skin is BlueNinja, the folder's name should
@@ -69,7 +79,7 @@ be blueninja.
 Now go to admin panel -> site configuration, and select the theme from the
 list. Save your configuration by clicking the 'Save' button at the bottom.
 
-Step 5 - Adding localization files
+Step 6 - Adding localization files
 -----------------------------------
 Copy the localization script (for example en_us.php) to the "lang" folder.
 Make sure the file name is in lowercase.
