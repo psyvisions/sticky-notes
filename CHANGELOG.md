@@ -1,6 +1,6 @@
 Version 0.4
 ------------
- * Trending pastes functinality - [Issue #10](http://goo.gl/rS9w1)
+ * Trending pastes functionality - [Issue #10](http://goo.gl/rS9w1)
  * Allow users to use a paste title - [Issue #9](http://goo.gl/tB1o3)
  * Fix newline issue in JSON - [Issue #5](http://goo.gl/vRYGe)
  * Add password reset option - [Issue #13](http://goo.gl/3RkPJ)
