@@ -81,8 +81,8 @@ if ($paste_search || $paste_rempass || $paste_makepub)
 
         $skin->assign(array(
             'paste_author'          => (empty($row['author']) ? $lang->get('anonymous') : htmlentities($row['author'])),
-            'paste_time'            => date('d M Y, h:i:s e', $row['timestamp']),
-            'paste_expire'          => date('d M Y, h:i:s e', $row['expire']),
+            'paste_time'            => date('d M Y, H:i:s e', $row['timestamp']),
+            'paste_expire'          => date('d M Y, H:i:s e', $row['expire']),
             'paste_data'            => htmlentities(substr($row['data'], 0, 100)) . '&hellip;',
             'paste_private'         => ($row['private'] == 1 ? $lang->get('yes') : $lang->get('no')),
             'paste_haspass'         => (!empty($row['password']) ? $lang->get('yes') : $lang->get('no')),

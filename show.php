@@ -278,7 +278,7 @@ else
 
 // Generate the data
 $user = empty($row['author']) ? $lang->get('anonymous') : htmlspecialchars($row['author']);
-$time = date('d M Y, h:i:s e', $row['timestamp']);
+$time = date('d M Y, H:i:s e', $row['timestamp']);
 $info = $lang->get('posted_info');
 
 $info = preg_replace('/\_\_user\_\_/', $user, $info);

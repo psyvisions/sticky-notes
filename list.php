@@ -31,7 +31,7 @@ $count = 0;
 $total = 0;
 $output_data = '';
 $pagination = '';
-$published = date('d M Y, h:i:s e', 1288800000);
+$published = date('d M Y, H:i:s e', 1288800000);
 
 // Validate mode
 if ($mode && $mode != 'xml' && $mode != 'json')
@@ -172,7 +172,7 @@ foreach ($rows as $row)
     // Generate the data
     $user = empty($row['author']) ? $lang->get('anonymous') : htmlspecialchars($row['author']);
     $timestamp = $row['timestamp'];
-    $time = date('d M Y, h:i:s e', $timestamp);
+    $time = date('d M Y, H:i:s e', $timestamp);
     $info = $lang->get('posted_info');
 
     $info = preg_replace('/\_\_user\_\_/', $user, $info);
