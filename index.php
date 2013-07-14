@@ -21,9 +21,10 @@ $password = $core->variable('paste_password', '');
 $private = $core->variable('paste_private', '');
 $project = $core->variable('project', '');
 $mode = $core->variable('mode', '');
-$time = time();
 $skip_insert = false;
 $new_id = 0;
+$url_key = '';
+$time = time();
 
 if (empty($project))
 {
@@ -143,10 +144,6 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
                 break;
             }
         }
-    }
-    else
-    {
-        $url_key = '';
     }
 
     if (!$skip_insert)
