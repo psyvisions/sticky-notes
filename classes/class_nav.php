@@ -18,7 +18,7 @@ class nav
     {
         $this->rewrite_on = $this->check_rewrite();
     }
-    
+
     // Check if mod_rewrite is enabled or not
     function check_rewrite()
     {
@@ -44,7 +44,7 @@ class nav
             $base = $core->current_uri();
 
             $arg_project = !empty($project) ? '?project=' . $project : '?';
-            $arg_page = $page > 1 ? "&page={$page}" : ""; 
+            $arg_page = $page > 1 ? "&page={$page}" : "";
             $arg_age = !empty($age) ? "&age={$age}" : "";
 
             $rewrite_base = $core->current_uri() . (!empty($project) ? "~{$project}/" : "");
@@ -97,7 +97,7 @@ class nav
     function get_paste($paste_id, $paste_key, $hash, $project, $format = '')
     {
         global $core, $config;
-        
+
         try
         {
             // Determine whether to use ID or key
@@ -109,20 +109,20 @@ class nav
             {
                 $key = $paste_id;
             }
-            
+
             if ($this->rewrite_on)
             {
                 $url = $core->current_uri() . (!empty($project) ? "~{$project}/" : "") .
-                                           "{$key}/" .
-                                           (!empty($hash) ? "{$hash}/" : "") .
-                                           (!empty($format) ? "{$format}/" : "");
+                                              "{$key}/" .
+                                              (!empty($hash) ? "{$hash}/" : "") .
+                                              (!empty($format) ? "{$format}/" : "");
             }
             else
             {
                 $url = $core->current_uri() . "show.php?id={$key}" .
-                                           (!empty($hash) ? "&hash={$hash}" : "") .
-                                           (!empty($project) ? "&project={$project}" : "") .
-                                           (!empty($format) ? "&mode={$format}" : "");
+                                              (!empty($hash) ? "&hash={$hash}" : "") .
+                                              (!empty($project) ? "&project={$project}" : "") .
+                                              (!empty($format) ? "&mode={$format}" : "");
             }
 
             return $url;

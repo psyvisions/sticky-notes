@@ -23,7 +23,7 @@ $project = $core->variable('project', '');
 $mode = $core->variable('mode', '');
 $time = time();
 $skip_insert = false;
-$db->insert_id = 0;
+$new_id = 0;
 
 if (empty($project))
 {
@@ -173,15 +173,18 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
             ':hash'         => $hash,
             ':ip'           => $core->remote_ip()
         ));
+
+        // Get the last inserted paste ID
+        $new_id = $db->insert_id('id');
     }
 
     // Address API requests
     if ($mode == 'xml' || $mode == 'json')
     {
-        if ($db->insert_id)
+        if ($new_id)
         {
             $skin->assign(array(
-                'paste_id'    => $config->url_key_enabled ? "p{$url_key}" : $db->insert_id,
+                'paste_id'    => $config->url_key_enabled ? "p{$url_key}" : $new_id,
                 'paste_hash'  => $private ? $hash : '',
             ));
 
@@ -199,10 +202,10 @@ if (($paste_submit || $api_submit) && strlen($data) > 0 && !$show_error)
     }
     else
     {
-        if ($db->insert_id)
+        if ($new_id)
         {
             $hash_arg = ($private || $password) ? $hash : '';
-            $url = $nav->get_paste($db->insert_id, $url_key, $hash_arg, $project);
+            $url = $nav->get_paste($new_id, $url_key, $hash_arg, $project);
 
             if (!$password)
             {

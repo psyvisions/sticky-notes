@@ -13,7 +13,6 @@ class db
     // Class wide variables
     var $pdo;
     var $prefix;
-    var $insert_id;
     var $affected_rows;
 
     // Function to initialize a db connection
@@ -92,11 +91,7 @@ class db
                     return $stmt->fetchAll(PDO::FETCH_ASSOC);
                 }
             }
-            else if (strpos($sql, 'insert') === 0)
-            {
-                $this->insert_id = $stmt;
-            }
-            else if (strpos($sql, 'update') === 0 || strpos($sql, 'delete') === 0)
+            else
             {
                 $this->affected_rows = $stmt->rowCount();
             }
@@ -107,6 +102,12 @@ class db
         {
             return false;
         }
+    }
+
+    // Gets the last inserted ID
+    function insert_id($column)
+    {
+        return $this->pdo->lastInsertId($column);
     }
 
     // Gets the database size
