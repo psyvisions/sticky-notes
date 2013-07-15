@@ -46,22 +46,14 @@ class auth
     {
         global $config, $db;
 
-        // Get authentication method
-        $method = $config->auth_method;
+        // Get authentication method callback
+        $callback = array($this, "authenticate_{$config->auth_method}");
 
-        // Check if the auth method is implemented
-        if (method_exists($this, "authenticate_{$method}"))
+        // Execute the method if it exists
+        if (is_callable($callback))
         {
-            // Create a new session
             $this->create_session();
-
-            // Generate the delegate and execute the method
-            $delegate = '$auth_status = $this->authenticate_' . $method .
-                        '("' . $username . '", "' . $password . '");';
-            eval($delegate);
-
-            // Return the authentication status returned by the delegate
-            return $auth_status;
+            return call_user_func($callback, $username, $password);
         }
 
         // Method not implemented, invalidate user
