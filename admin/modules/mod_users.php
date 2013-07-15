@@ -209,7 +209,7 @@ if ($user_save)
                 ':username' => $user_username,
                 ':password' => $hash,
                 ':salt'     => $salt,
-                ':email'    => $email,
+                ':email'    => $user_email,
                 ':dispname' => $disp_name
             ));
         }
