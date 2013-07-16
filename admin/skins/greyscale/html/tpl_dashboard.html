@@ -46,7 +46,11 @@
 
     <tr>
         <td>{{cache_size}}</td>
-        <td>[[cache_size]]</td>
+        <td>
+            [[cache_size]]
+            &bull;
+            <a href="?action=clearcache" onclick="return confirm('{{clear_cache_confirm}}')" class="darkred">{{clear_cache}}</a>
+        </td>
     </tr>
 
     <tr>

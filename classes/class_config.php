@@ -28,6 +28,8 @@ class config
     var $admin_lang_name;
     var $url_key_enabled;
     var $google_api_key;
+    var $cache_life;
+    var $tracking_method;
 
     var $sg_services;
     var $sg_php_key;
@@ -103,6 +105,8 @@ class config
             $this->admin_lang_name = isset($admin_lang_name) ? html_entity_decode($admin_lang_name) : 'en-gb';
             $this->url_key_enabled = isset($url_key_enabled) ? $url_key_enabled : false;
             $this->google_api_key  = isset($google_api_key) ? html_entity_decode($google_api_key) : '';
+            $this->cache_life      = isset($cache_life) ? $cache_life : 7200;
+            $this->tracking_method = isset($tracking_method) ? html_entity_decode($tracking_method) : 'REMOTE_ADDR';
 
             $this->sg_services     = isset($sg_services) ? html_entity_decode($sg_services) : 'ipban,noflood,stealth,php,censor';
             $this->sg_php_key      = isset($sg_php_key) ? html_entity_decode($sg_php_key) : '';
@@ -160,7 +164,9 @@ class config
             fwrite($fp, '$admin_skin_name = "' . htmlentities($this->admin_skin_name) . '";' . "\n");
             fwrite($fp, '$admin_lang_name = "' . htmlentities($this->admin_lang_name) . '";' . "\n");
             fwrite($fp, '$url_key_enabled = ' . ($this->url_key_enabled ? 'true' : 'false') . ';' . "\n");
-            fwrite($fp, '$google_api_key = "' . htmlentities($this->google_api_key) . '";' . "\n\n");
+            fwrite($fp, '$google_api_key = "' . htmlentities($this->google_api_key) . '";' . "\n");
+            fwrite($fp, '$cache_life = ' . intval($this->cache_life) . ';' . "\n");
+            fwrite($fp, '$tracking_method = "' . htmlentities($this->tracking_method) . '";' . "\n\n");
 
             fwrite($fp, '$sg_services = "' . htmlentities($this->sg_services) . '";' . "\n");
             fwrite($fp, '$sg_php_key = "' . htmlentities($this->sg_php_key) . '";' . "\n");
@@ -231,7 +237,9 @@ class config
             fwrite($fp, '$admin_skin_name = "Greyscale";' . "\n");
             fwrite($fp, '$admin_lang_name = "en-gb";' . "\n");
             fwrite($fp, '$url_key_enabled = false;' . "\n");
-            fwrite($fp, '$google_api_key = "";' . "\n\n");
+            fwrite($fp, '$google_api_key = "";' . "\n");
+            fwrite($fp, '$cache_life = 7200;' . "\n");
+            fwrite($fp, '$tracking_method = "REMOTE_ADDR";' . "\n\n");
 
             fwrite($fp, '$sg_services = "ipban,noflood,stealth,php,censor";' . "\n");
             fwrite($fp, '$sg_php_key = "";' . "\n");

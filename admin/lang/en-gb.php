@@ -112,6 +112,18 @@ $lang_data = array(
     'censored_phrases'      => 'Censored phrases',
     'censored_phrases_exp'  => 'Pastes containing these phrases will be dropped (case <b>insensitive</b>).<br />' .
                                'Enter each phrase in a new line',
+    'user_tracking'         => 'User tracking',
+    'user_tracking_exp'     => 'Sets how the IP address for the user is resolved. Please note that the <b>Forwarded</b> ' .
+                               'method makes use of <b>HTTP_X_FORWARDED_FOR</b> that can be spoofed by the user. ' .
+                               'However, it helps in providing a more accurate IP address in case the user is behind ' .
+                               'a proxy server.',
+    'tracking_native'       => 'Native',
+    'tracking_forwarded'    => 'Forwarded',
+    'cache_life'            => 'Cache life',
+    'cache_life_exp'        => 'Life of the cached templates in seconds',
+    'clear_cache'           => 'Clear the template cache',
+    'clear_cache_confirm'   => 'Are you sure you want to clear the template cache?',
+    'cache_life_range'      => 'Cache life must be 10 or greater',
 
     'smtp_options'              => 'SMTP options',
     'smtp_reqd'                 => 'Server, port and sender are mandatory fields',

@@ -109,7 +109,26 @@ class core
     // Function to return remote IP
     function remote_ip()
     {
-        return $_SERVER['REMOTE_ADDR'];
+        global $config;
+
+        // Get the user's IP
+        $remote = getenv($config->tracking_method);
+
+        if ($remote === false)
+        {
+            $remote = getenv('REMOTE_ADDR');
+        }
+
+        // Return the last entry of the comma separated IP list
+        $ip_ary = explode(',', $remote);
+        $ip_addr = trim(end($ip_ary));
+
+        if (filter_var($ip_addr, FILTER_VALIDATE_IP))
+        {
+            return $ip_addr;
+        }
+
+        return '0.0.0.0';
     }
 
     // Function to set a cookie

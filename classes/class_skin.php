@@ -170,7 +170,7 @@ class skin
             'skin_path'         => $this->skin_path,
             'addon_path'        => $core->root_uri() . 'addons',
             'skin_name'         => $this->skin_name_fancy,
-            'nav_home_rss'      => $core->current_uri(),
+            'current_uri'       => $core->current_uri(),
             'nav_newpaste'      => $nav->get('nav_newpaste', $project),
             'nav_archives'      => $nav->get('nav_archives', $project),
             'nav_trending'      => $nav->get('nav_trending', $project),

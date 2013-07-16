@@ -2,7 +2,7 @@
 <rss version="0.92">
     <channel>
         <title>{{feed}} - {{site_name}}</title>
-        <link>[[nav_home_rss]]</link>
+        <link>[[current_uri]]</link>
         <description>{{site_title}}</description>
         <language>{{lang_name}}</language>
         <pubDate>[[feed_time]]</pubDate>
@@ -10,7 +10,7 @@
         <image>
             <url>[[site_logo_rss]]</url>
             <title>{{site_title}}</title>
-            <link>[[nav_home_rss]]</link>
+            <link>[[current_uri]]</link>
         </image>
         <copyright>Sayak Banerjee (mail@sayakbanerjee.com)</copyright>
         [[list_data]]

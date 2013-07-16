@@ -75,8 +75,10 @@ class cache
     }
 
     // Garbage collector
-    function _gc()
+    function _gc($force = false)
     {
+        global $config;
+
         if ($this->is_available)
         {
             $dp = opendir($this->cache_dir);
@@ -87,8 +89,8 @@ class cache
                {
                     $age = time() - filectime("{$this->cache_dir}{$file}");
 
-                    // Delete files older than 2 hours
-                    if ($age > 7200)
+                    // Delete files older than the configured value
+                    if ($age > $config->cache_life || $force)
                     {
                         @unlink("{$this->cache_dir}{$file}");
                     }

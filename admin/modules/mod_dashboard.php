@@ -29,6 +29,13 @@ if ($action == 'sysload')
     die($load);
 }
 
+// Check if we want to clear the cache
+if ($action == 'clearcache')
+{
+    $cache->_gc(true);
+    $core->redirect($core->current_uri());
+}
+
 // Get DB version
 $sql = "SELECT VERSION() AS ver";
 $row = $db->query($sql, array(), true);
