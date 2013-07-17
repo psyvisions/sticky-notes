@@ -10,14 +10,13 @@
 
 // Collect some data
 $paste_id = $core->variable('paste_id', '');
-$paste_id_orig = $paste_id;
-
 $paste_search = isset($_POST['paste_search']);
 $paste_rempass = isset($_POST['paste_rempass']);
 $paste_makepub = isset($_POST['paste_makepub']);
 $paste_delete = isset($_POST['paste_delete']);
 
 // Set globals
+$paste_id_orig = $paste_id;
 $spacer_visibility = 'visible';
 $detail_visibility = 'collapsed';
 $script_notification = '';
@@ -25,7 +24,7 @@ $sql_where = '';
 $params = array();
 
 // Get the sql where claud based on the type of paste id
-if (!empty($paste_id))
+if ($paste_id)
 {
     if ($config->url_key_enabled && strtolower(substr($paste_id, 0, 1)) == 'p')
     {
@@ -42,7 +41,7 @@ if (!empty($paste_id))
 }
 
 // Make public
-if ($paste_makepub)
+if ($paste_makepub && $paste_id)
 {
     $sql = "UPDATE {$db->prefix}main SET private=0, password='' " . $sql_where;
     $db->query($sql, $params);
@@ -56,7 +55,7 @@ if ($paste_makepub)
 }
 
 // Remove password
-if ($paste_rempass)
+if ($paste_rempass && $paste_id)
 {
     $sql = "UPDATE {$db->prefix}main SET password='' " . $sql_where;
     $db->query($sql, $params);
