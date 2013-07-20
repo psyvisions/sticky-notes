@@ -9,7 +9,7 @@
 */
 
 // Turn off error reporting
-error_reporting(E_ALL);
+error_reporting(0);
 
 // Define constants
 define('UPDATE_SERVER', 'https://raw.github.com/sayakb/sticky-notes/master/VERSION');
