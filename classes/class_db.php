@@ -59,7 +59,14 @@ class db
                     break;
             }
 
-            $this->pdo->exec("SET NAMES 'utf8'");
+            if ($this->pdo != null)
+            {
+                $this->pdo->exec("SET NAMES 'utf8'");
+            }
+            else
+            {
+                throw new PDOException("Unable to connect to the database. Please check your DB settings.");
+            }
         }
         catch (PDOException $e)
         {

@@ -13,14 +13,16 @@ class auth
     // Global vars
     var $sid;
     var $max_age;
+    var $crypt;
 
     // Constructor
     function __construct()
     {
         global $core;
+        require_once "{$core->root_dir}addons/phpass/PasswordHash.php";
 
-        // Include the password_* compatibility library
-        require_once "{$core->root_dir}addons/passcompat/password.php";
+        // Use cost=10 as it works nicely on most hardware
+        $this->crypt = new PasswordHash(10, false);
     }
 
     // Method for creating a new session and killing expired ones
@@ -119,7 +121,7 @@ class auth
     // Create a new password hash
     function create_password($password, $salt)
     {
-        return password_hash($password . $salt, PASSWORD_BCRYPT);
+        return $this->crypt->HashPassword($password . $salt);
     }
 
     // Checks a password hash, updates it to bcrypt if still using sha1
@@ -130,7 +132,7 @@ class auth
         // Hash created using blowfish algorithm
         if ($hash[0] == '$')
         {
-            return password_verify($password . $salt, $hash);
+            return $this->crypt->CheckPassword($password . $salt, $hash);
         }
 
         // Hash created using secure hash algorithm
